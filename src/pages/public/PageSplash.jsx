@@ -1,23 +1,89 @@
-import { Button } from "@mui/material"
-import { useNavigate } from "react-router-dom"
+import React, { useState } from 'react';
+import {
+  Container,
+  Typography,
+  TextField,
+  Button,
+} from '@mui/material';
+import { makeStyles } from '@mui/styles'
 
-const PageSplash = () => {
-    const navigate = useNavigate()
+const useStyles = makeStyles((theme) => ({
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginTop: theme.spacing(8),
+  },
+  title: {
+    marginBottom: theme.spacing(4),
+  },
+  form: {
+    width: '100%',
+    maxWidth: 400,
+    marginTop: theme.spacing(2),
+  },
+  textField: {
+    marginBottom: theme.spacing(2),
+  },
+  submitButton: {
+    marginTop: theme.spacing(4),
+  },
+}));
 
-    const handleClickRegister = (e) => {
-        e.stopPropagation()
-        e.preventDefault()
-        //navigate('/auth/register');
-    }
+const LoginPage = () => {
+  const classes = useStyles();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-    return (
-        <>
-            <Button variant="contained" onClick={handleClickRegister}>
-                Sign Up
-            </Button>
-        </>
-    )
-}
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
 
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
 
-export default PageSplash
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // Handle login logic
+  };
+
+  return (
+    <Container component="main" className={classes.container}>
+      <Typography variant="h4" component="h1" className={classes.title}>
+        Login
+      </Typography>
+      <form onSubmit={handleSubmit} className={classes.form}>
+        <TextField
+          variant="outlined"
+          label="Email"
+          type="email"
+          value={email}
+          onChange={handleEmailChange}
+          fullWidth
+          className={classes.textField}
+        />
+        <TextField
+          variant="outlined"
+          label="Password"
+          type="password"
+          value={password}
+          onChange={handlePasswordChange}
+          fullWidth
+          className={classes.textField}
+        />
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          fullWidth
+          className={classes.submitButton}
+        >
+          Login
+        </Button>
+      </form>
+    </Container>
+  );
+};
+
+export default LoginPage;

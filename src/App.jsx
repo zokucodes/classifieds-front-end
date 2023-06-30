@@ -67,7 +67,7 @@ function App() {
         {/* <NavBar /> */}
       </header>
       <ThemeProvider theme={theme}>
-        <div className='w-full h-screen white'>
+        <div style={{ height: "100%" }} className='w-full white'>
           <Routes>
             <Route path="/" element={<PageSplash />} />
             <Route path="/auth">
