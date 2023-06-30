@@ -7,6 +7,7 @@ import { useGlobalContext } from './contexts/GlobalContext'
 import { grey, purple, red } from '@mui/material/colors';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import PageSplash from './pages/public/PageSplash';
+import PageRegister from './pages/auth/PageRegister';
 
 const getDesignTokens = (mode) => ({
   palette: {
@@ -69,6 +70,10 @@ function App() {
         <div className='w-full h-screen white'>
           <Routes>
             <Route path="/" element={<PageSplash />} />
+            <Route path="/auth">
+              <Route path='register' element={<PageRegister />} />
+
+            </Route>
           </Routes>
         </div>
       </ThemeProvider>
