@@ -1,89 +1,73 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, TextField, Grid, Paper, Typography } from '@mui/material';
 
-class PageRegister extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { username: '', email: '', password: '' };
+const PageRegister = () => {
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+
+  const handleRegister = (e) => {
+    e.stopPropagation()
+    e.preventDefault()
   }
 
-  handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
-  }
+  return (
+    <div className='flex items-center justify-center lg:h-auto !h-full'>
+      <Paper className="lg:h-auto h-full" style={{ padding: '24px',  }}>
+        <Typography variant="h6">Register</Typography>
+        <form noValidate autoComplete="off" onSubmit={handleRegister}>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            autoComplete="email"
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            id="password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="cpassword"
+            label="Confirm Password"
+            type="cpassword"
+            id="cpassword"
+            value={confirmPassword}
+            onChange={e => setConfirmPassword(e.target.value)}
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            style={{ marginTop: '24px' }}
+          >
+            Register
+          </Button>
+        </form>
+      </Paper>
+    </div>
 
-  handleSubmit(event) {
-    event.preventDefault();
-    // Handle your form submission here
-    console.log(this.state);
-  }
-
-  render() {
-    return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh' 
-      }}>
-        <Grid item xs={12} sm={8} md={4}>
-          <Paper style={{ padding: '24px' }}>
-            <Typography variant="h6">Register</Typography>
-            <form noValidate autoComplete="off" onSubmit={this.handleSubmit}>
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="username"
-                label="Username"
-                name="username"
-                value={this.state.username}
-                onChange={this.handleChange}
-                autoFocus
-              />
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                value={this.state.email}
-                onChange={this.handleChange}
-                autoComplete="email"
-              />
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                value={this.state.password}
-                onChange={this.handleChange}
-                autoComplete="current-password"
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                style={{ marginTop: '24px' }}
-              >
-                Register
-              </Button>
-            </form>
-          </Paper>
-        </Grid>
-      </div>
-    );
-  }
+  )
 }
+
 
 export default PageRegister;
