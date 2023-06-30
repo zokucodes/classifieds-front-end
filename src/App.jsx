@@ -10,6 +10,7 @@ import PageSplash from './pages/public/PageSplash';
 import PageRegister from './pages/auth/PageRegister';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import PageLogin from './pages/auth/PageLogin';
 
 const getDesignTokens = (mode) => ({
   palette: {
@@ -75,6 +76,7 @@ function App() {
               <Route path="/" element={<PageSplash />} />
               <Route path="/auth">
                 <Route path='register' element={<PageRegister />} />
+                <Route path='login' element={<PageLogin />} />
 
               </Route>
             </Routes>
