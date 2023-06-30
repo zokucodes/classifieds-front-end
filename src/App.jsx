@@ -8,6 +8,8 @@ import { grey, purple, red } from '@mui/material/colors';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import PageSplash from './pages/public/PageSplash';
 import PageRegister from './pages/auth/PageRegister';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 const getDesignTokens = (mode) => ({
   palette: {
@@ -62,23 +64,25 @@ function App() {
   }, [])
 
   return (
-    <Router>
-      <header>
-        {/* <NavBar /> */}
-      </header>
-      <ThemeProvider theme={theme}>
-        <div style={{ height: "100%" }} className='w-full white'>
-          <Routes>
-            <Route path="/" element={<PageSplash />} />
-            <Route path="/auth">
-              <Route path='register' element={<PageRegister />} />
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Router>
+        <header>
+          {/* <NavBar /> */}
+        </header>
+        <ThemeProvider theme={theme}>
+          <div style={{ height: "100%" }} className='w-full white'>
+            <Routes>
+              <Route path="/" element={<PageSplash />} />
+              <Route path="/auth">
+                <Route path='register' element={<PageRegister />} />
 
-            </Route>
-          </Routes>
-        </div>
-      </ThemeProvider>
+              </Route>
+            </Routes>
+          </div>
+        </ThemeProvider>
 
-    </Router>
+      </Router>
+    </LocalizationProvider>
   )
 }
 

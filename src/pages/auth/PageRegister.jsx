@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Button, TextField, Grid, Paper, Typography } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
 
 const PageRegister = () => {
 
@@ -17,6 +19,7 @@ const PageRegister = () => {
       <Paper className="lg:h-auto h-full" style={{ padding: '24px',  }}>
         <Typography variant="h6">Register</Typography>
         <form noValidate autoComplete="off" onSubmit={handleRegister}>
+          <DatePicker minDate={dayjs('2022-01-01')} />
           <TextField
             variant="outlined"
             margin="normal"
