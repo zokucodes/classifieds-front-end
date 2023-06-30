@@ -22,60 +22,68 @@ class PageRegister extends React.Component {
 
   render() {
     return (
-      <Paper style={{ padding: '24px' }}>
-        <Typography variant="h6">Register</Typography>
-        <form noValidate autoComplete="off" onSubmit={this.handleSubmit}>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="username"
-            label="Username"
-            name="username"
-            value={this.state.username}
-            onChange={this.handleChange}
-            autoFocus
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            value={this.state.email}
-            onChange={this.handleChange}
-            autoComplete="email"
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            value={this.state.password}
-            onChange={this.handleChange}
-            autoComplete="current-password"
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            style={{ marginTop: '24px' }}
-          >
-            Register
-          </Button>
-        </form>
-      </Paper>
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh' 
+      }}>
+        <Grid item xs={12} sm={8} md={4}>
+          <Paper style={{ padding: '24px' }}>
+            <Typography variant="h6">Register</Typography>
+            <form noValidate autoComplete="off" onSubmit={this.handleSubmit}>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="username"
+                label="Username"
+                name="username"
+                value={this.state.username}
+                onChange={this.handleChange}
+                autoFocus
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                value={this.state.email}
+                onChange={this.handleChange}
+                autoComplete="email"
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                value={this.state.password}
+                onChange={this.handleChange}
+                autoComplete="current-password"
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                style={{ marginTop: '24px' }}
+              >
+                Register
+              </Button>
+            </form>
+          </Paper>
+        </Grid>
+      </div>
     );
   }
 }
 
 export default PageRegister;
-
