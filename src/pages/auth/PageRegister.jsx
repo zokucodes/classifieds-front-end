@@ -18,10 +18,13 @@ const PageRegister = () => {
 
   return (
     <div className='flex items-center justify-center lg:h-auto !h-full'>
-      <Paper className="lg:h-auto w-[30vw] h-full" style={{ padding: '24px',  }}>
+      <Paper className="lg:h-auto lg:w-[30vw] h-full" style={{ padding: '24px', }}>
         <Typography className='pb-12' variant="h4">Register</Typography>
         <form noValidate autoComplete="off" onSubmit={handleRegister}>
-          <DatePicker className='w-full' minDate={dayjs('2022-01-01')} />
+          <div className='mb-[8px] w-full'>
+            <DatePicker className='w-full' minDate={dayjs('2022-01-01')} />
+          </div>
+
           <TextField
             variant="outlined"
             margin="normal"
