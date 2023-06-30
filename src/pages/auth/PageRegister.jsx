@@ -5,9 +5,11 @@ import dayjs from 'dayjs';
 
 const PageRegister = () => {
 
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleRegister = (e) => {
     e.stopPropagation()
@@ -20,6 +22,28 @@ const PageRegister = () => {
         <Typography variant="h6">Register</Typography>
         <form noValidate autoComplete="off" onSubmit={handleRegister}>
           <DatePicker minDate={dayjs('2022-01-01')} />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="firstName"
+            label="First Name"
+            name="firstName"
+            value={firstName}
+            onChange={e => setFirstName(e.target.value)}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="lastName"
+            label="Last Name"
+            name="lastName"
+            value={lastName}
+            onChange={e => setLastName(e.target.value)}
+          />
           <TextField
             variant="outlined"
             margin="normal"
@@ -51,7 +75,7 @@ const PageRegister = () => {
             fullWidth
             name="cpassword"
             label="Confirm Password"
-            type="cpassword"
+            type="password"
             id="cpassword"
             value={confirmPassword}
             onChange={e => setConfirmPassword(e.target.value)}
@@ -68,9 +92,7 @@ const PageRegister = () => {
         </form>
       </Paper>
     </div>
-
   )
 }
-
 
 export default PageRegister;
