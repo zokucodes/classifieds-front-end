@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, TextField, Paper, Typography } from '@mui/material';
+import { Button, TextField, Paper, Typography, CssBaseline } from '@mui/material';
 import { Login } from '../../utils/api';
 import { useGlobalContext } from '../../contexts/GlobalContext';
 
@@ -18,7 +18,8 @@ const PageLogin = () => {
 
 
     return (
-        <div className='flex items-center justify-center lg:h-auto !h-full'>
+        <main className='flex items-center justify-center lg:h-auto !h-full'>
+            <CssBaseline />
             <Paper className="lg:h-auto lg:w-[40vw] h-full" style={{ padding: '24px', }}>
                 <Typography className='pb-12' variant="h4">Login</Typography>
                 <form className='w-full' noValidate autoComplete="off" onSubmit={handleLogin}>
@@ -58,7 +59,7 @@ const PageLogin = () => {
                     </Button>
                 </form>
             </Paper>
-        </div>
+        </main>
     )
 }
 
