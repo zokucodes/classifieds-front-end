@@ -1,23 +1,27 @@
 import React, { useState } from 'react';
 import { Button, TextField, Paper, Typography } from '@mui/material';
+import { Login } from '../../utils/api';
+import { useGlobalContext } from '../../contexts/GlobalContext';
 
 const PageLogin = () => {
-
+    const { gAddErrors, gToggleColorMode } = useGlobalContext()
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
     const handleLogin = (e) => {
         e.stopPropagation()
         e.preventDefault()
+        Login(gAddErrors, { email, password }).then(res => {
+            console.log(res)
+        })
     }
 
 
     return (
         <div className='flex items-center justify-center lg:h-auto !h-full'>
-            <Paper className="lg:h-auto lg:w-[30vw] h-full" style={{ padding: '24px', }}>
+            <Paper className="lg:h-auto lg:w-[40vw] h-full" style={{ padding: '24px', }}>
                 <Typography className='pb-12' variant="h4">Login</Typography>
-                <form noValidate autoComplete="off" onSubmit={handleLogin}>
-
+                <form className='w-full' noValidate autoComplete="off" onSubmit={handleLogin}>
                     <TextField
                         variant="outlined"
                         margin="normal"
@@ -42,6 +46,7 @@ const PageLogin = () => {
                         value={password}
                         onChange={e => setPassword(e.target.value)}
                     />
+                    <Button onClick={gToggleColorMode} variant="text">Forgot Password?</Button>
                     <Button
                         type="submit"
                         fullWidth

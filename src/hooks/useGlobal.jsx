@@ -6,7 +6,13 @@ export const useGlobal = () => {
     const [errors, setErrors] = useState([])
     const [showErrors, setShowErrors] = useState(false)
 
+    const [colorMode, setColorMode] = useState('light')
+
     const [items, setItems] = useState([])
+
+    const gToggleColorMode = () => {
+        setColorMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
+    }
 
     const handleResize = () => {
         if (window.innerWidth < 720) {
@@ -96,9 +102,14 @@ export const useGlobal = () => {
             gClearItems,
 
             gShowErrors: showErrors,
+            gSetShowErrors: setShowErrors,
             gAddErrors,
             gRemoveErrorByID,
-            gClearErrors
+            gClearErrors,
+
+            gColorMode: colorMode,
+            gSetColorMode: setColorMode,
+            gToggleColorMode
 
         }
     );

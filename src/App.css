@@ -37,6 +37,10 @@
   }
 }
 
+input {
+  box-shadow: 0 0 0 100px transparent inset !important;
+}
+
 .card {
   padding: 2em;
 }
