@@ -73,3 +73,35 @@ export async function Login(addError, DATA) {
         return HandleAPIError(err, addError, { message: `Failed to login as user ${DATA?.email}`, type: DEBUG_VALUES.console.types.auth }, err.response.status)
     }
 }
+
+
+export async function VerifyEmail(addError, DATA) {
+    try {
+
+        try {
+            var errs = []
+
+            if (typeof DATA?.token !== 'string') {
+                errs.push({ code: 400, msg: `Token must be a string` })
+            } else if (validator.isEmpty(DATA?.token)) {
+                errs.push({ code: 400, msg: "Token not set. Maybe you didn't copy the entire link?" })
+            }
+
+
+            if (errs.length > 0) {
+                AddErrorArrayToContext(errs, addError)
+                return { status: false, error: errs }
+            }
+
+        } catch (err) {
+            return { status: false, error: [{ msg: "Unspecified error" }] }
+        }
+        const dataToSend = FilterObjectByList(DATA, [
+            'token'])
+        const res = await axios.post(`${ENV_API_URL}/auth/VerifyEmail`, dataToSend, { withCredentials: true })
+        DEBUG_WTC(DEBUG_VALUES.console.types.auth, `Verified email successfully`, DEBUG_VALUES.console.colors.green)
+        return res.data
+    } catch (err) {
+        return HandleAPIError(err, addError, { message: `Failed to verify email`, type: DEBUG_VALUES.console.types.auth }, err.response.status)
+    }
+}

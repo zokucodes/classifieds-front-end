@@ -23,6 +23,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import PageLogin from './pages/auth/PageLogin';
 import { ERROR_MESSAGE_STRINGS } from './utils/values';
 import { GetRandomIntInRange } from './utils/misc';
+import PageVerifyEmail from './pages/auth/PageVerifyEmail';
 
 const style = {
   position: 'absolute',
@@ -207,6 +208,7 @@ function App() {
               <Route path="/auth">
                 <Route path='register' element={<PageRegister />} />
                 <Route path='login' element={<PageLogin />} />
+                <Route path='VerifyEmail' element={<PageVerifyEmail />} />
 
               </Route>
             </Routes>

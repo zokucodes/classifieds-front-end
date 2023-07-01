@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, TextField, Paper, Typography } from '@mui/material';
+import { Button, TextField, Paper, Typography, CssBaseline } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 
@@ -17,7 +17,8 @@ const PageRegister = () => {
   }
 
   return (
-    <div className='flex items-center justify-center lg:h-auto !h-full'>
+    <main className='flex items-center justify-center lg:h-auto !h-full'>
+      <CssBaseline />
       <Paper className="lg:h-auto lg:w-[30vw] h-full" style={{ padding: '24px', }}>
         <Typography className='pb-12' variant="h4">Register</Typography>
         <form noValidate autoComplete="off" onSubmit={handleRegister}>
@@ -94,7 +95,7 @@ const PageRegister = () => {
           </Button>
         </form>
       </Paper>
-    </div>
+    </main>
   )
 }
 
