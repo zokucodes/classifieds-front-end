@@ -27,6 +27,7 @@ import { GetRandomIntInRange } from './utils/misc';
 import PageVerifyEmail from './pages/auth/PageVerifyEmail';
 import PageForgotPassword from './pages/auth/PageForgotPassword';
 import PageResetPassword from './pages/auth/PageResetPassword';
+import PageMainManagement from './pages/user/PageMainManagement';
 
 const style = {
   position: 'absolute',
@@ -216,6 +217,13 @@ function App() {
                 <Route path='ResetPassword' element={<PageResetPassword />} />
 
               </Route>
+              <Route path="/app">
+                <Route path="manage">
+                  <Route path='' element={<PageMainManagement />} />
+
+                </Route>
+              </Route>
+
             </Routes>
           </div>
           {

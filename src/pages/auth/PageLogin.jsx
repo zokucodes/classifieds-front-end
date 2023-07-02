@@ -4,8 +4,12 @@ import { Login } from '../../utils/api';
 import { useGlobalContext } from '../../contexts/GlobalContext';
 import { LoadingButton } from '@mui/lab';
 import { useNavigate } from 'react-router-dom';
+import Nav from '../../components/layout/Nav';
+import MainPageTemplate from '../templates/MainPageTemplate';
+import { ENV_APPNAME } from '../../utils/values';
 
 const PageLogin = () => {
+    document.title = `Login | ${ENV_APPNAME}`
     const navigate = useNavigate()
     const { gAddErrors, gToggleColorMode } = useGlobalContext()
     const [email, setEmail] = useState("");
@@ -39,8 +43,7 @@ const PageLogin = () => {
 
 
     return (
-        <main className='flex items-center justify-center lg:h-auto !h-full'>
-            <CssBaseline />
+        <MainPageTemplate ELEMENTS={
             <Paper className="lg:h-auto lg:w-[40vw] w-full h-full" style={{ padding: '24px', }}>
                 <Typography className='pb-12' variant="h4">Login</Typography>
                 <form className='w-full flex flex-col' noValidate autoComplete="off" onSubmit={handleLogin}>
@@ -82,7 +85,8 @@ const PageLogin = () => {
                 </form>
                 <Button href="/auth/register" style={{ marginTop: '24px' }} onClick={handleClickRegister} variant="text">Don't have an account? Register</Button>
             </Paper>
-        </main>
+        } />
+
     )
 }
 

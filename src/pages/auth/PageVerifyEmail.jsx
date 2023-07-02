@@ -3,9 +3,10 @@ import { useLayoutEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { VerifyEmail } from "../../utils/api";
 import { useGlobalContext } from "../../contexts/GlobalContext";
-import { ENV_SUPPORT_EMAIL } from "../../utils/values";
+import { ENV_APPNAME, ENV_SUPPORT_EMAIL } from "../../utils/values";
 
 const PageVerifyEmail = () => {
+    document.title = `Verify Email | ${ENV_APPNAME}`
     const navigate = useNavigate()
     const location = useLocation();
     const { gAddErrors } = useGlobalContext()

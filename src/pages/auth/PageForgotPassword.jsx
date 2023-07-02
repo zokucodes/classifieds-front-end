@@ -5,9 +5,11 @@ import { useGlobalContext } from '../../contexts/GlobalContext';
 import { LoadingButton } from '@mui/lab';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ForgotPassword } from '../../utils/api';
+import { ENV_APPNAME } from '../../utils/values';
 
 
 const PageForgotPassword = () => {
+    document.title = `Forgot Password | ${ENV_APPNAME}`
     const navigate = useNavigate()
 
     const location = useLocation();

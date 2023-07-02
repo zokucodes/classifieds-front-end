@@ -1,3 +1,5 @@
+import { GetRandomIntInRange } from "./misc"
+
 export const ERROR_MESSAGE_STRINGS = {
     generic: ["Something went wrong", "An error has occurred"],
     user_error: ["Bad Request"],
@@ -5,11 +7,29 @@ export const ERROR_MESSAGE_STRINGS = {
     auth_error: []
 }
 
+export const ENV_SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL
+export const ENV_APPNAME = import.meta.env.VITE_APPNAME
+
 export function GetValidDOBRange() {
     return {
         min: new Date('1915-01-01'),
         max: new Date(new Date().getFullYear() - 18, new Date().getMonth(), new Date().getDate() - 1)
     }
+}
+
+
+export const PLACEHOLDERS = {
+    searchListings: {
+        searchTerms: [
+            'Computer monitor',
+            'Wooden table',
+            'Mobile phone case'
+        ]
+    }
+}
+
+export function GetRandomItemFromArray(array) {
+    return array[GetRandomIntInRange(0, array.length - 1)]
 }
 
 
@@ -1014,4 +1034,3 @@ export const VALID_VALUES = {
     }
 }
 
-export const ENV_SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL

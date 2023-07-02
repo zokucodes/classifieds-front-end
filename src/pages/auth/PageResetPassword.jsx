@@ -3,8 +3,10 @@ import { useLayoutEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { ResetPasswordFromEmail } from "../../utils/api";
+import { ENV_APPNAME } from "../../utils/values";
 
 const PageResetPassword = () => {
+    document.title = `Reset Password | ${ENV_APPNAME}`
     const navigate = useNavigate()
     const location = useLocation();
     const { gAddErrors } = useGlobalContext()

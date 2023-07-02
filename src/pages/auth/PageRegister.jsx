@@ -3,7 +3,7 @@ import { Button, TextField, Paper, Typography, CssBaseline, Divider, Autocomplet
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
-import { COUNTRIES_ARRAY, GetValidDOBRange } from '../../utils/values';
+import { COUNTRIES_ARRAY, ENV_APPNAME, GetValidDOBRange } from '../../utils/values';
 import { Register, SearchLocations } from '../../utils/api';
 import { useGlobalContext } from '../../contexts/GlobalContext';
 import { LoadingButton } from '@mui/lab';
@@ -11,6 +11,7 @@ import { LoadingButton } from '@mui/lab';
 const validDOBRange = GetValidDOBRange()
 
 const PageRegister = () => {
+  document.title = `Register | ${ENV_APPNAME}`
   const navigate = useNavigate()
   const { gAddErrors } = useGlobalContext()
 
