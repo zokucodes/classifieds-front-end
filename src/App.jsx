@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import Backdrop from '@mui/material/Backdrop';
+import 'dayjs/locale/en-gb';
 import {
   Container,
   Typography,
@@ -196,7 +197,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
 
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <LocalizationProvider adapterLocale='en-gb' dateAdapter={AdapterDayjs}>
         <Router>
           <header>
             {/* <NavBar /> */}

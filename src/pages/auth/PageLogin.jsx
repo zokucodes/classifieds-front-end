@@ -2,27 +2,46 @@ import React, { useState } from 'react';
 import { Button, TextField, Paper, Typography, CssBaseline } from '@mui/material';
 import { Login } from '../../utils/api';
 import { useGlobalContext } from '../../contexts/GlobalContext';
+import { LoadingButton } from '@mui/lab';
+import { useNavigate } from 'react-router-dom';
 
 const PageLogin = () => {
+    const navigate = useNavigate()
     const { gAddErrors, gToggleColorMode } = useGlobalContext()
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false)
+
+    const handleClickForgotPassword = (e) => {
+        e.stopPropagation()
+        e.preventDefault()
+        alert('Not Implemented')
+    }
 
     const handleLogin = (e) => {
         e.stopPropagation()
         e.preventDefault()
+        setLoading(true)
         Login(gAddErrors, { email, password }).then(res => {
             console.log(res)
+        }).finally(() => {
+            setLoading(false)
         })
+    }
+
+    const handleClickRegister = (e) => {
+        e.stopPropagation()
+        e.preventDefault()
+        navigate('/auth/register')
     }
 
 
     return (
         <main className='flex items-center justify-center lg:h-auto !h-full'>
             <CssBaseline />
-            <Paper className="lg:h-auto lg:w-[40vw] h-full" style={{ padding: '24px', }}>
+            <Paper className="lg:h-auto lg:w-[40vw] w-full h-full" style={{ padding: '24px', }}>
                 <Typography className='pb-12' variant="h4">Login</Typography>
-                <form className='w-full' noValidate autoComplete="off" onSubmit={handleLogin}>
+                <form className='w-full flex flex-col' noValidate autoComplete="off" onSubmit={handleLogin}>
                     <TextField
                         variant="outlined"
                         margin="normal"
@@ -47,8 +66,9 @@ const PageLogin = () => {
                         value={password}
                         onChange={e => setPassword(e.target.value)}
                     />
-                    <Button onClick={gToggleColorMode} variant="text">Forgot Password?</Button>
-                    <Button
+                    <Button sx={{ marginLeft: "auto" }} onClick={handleClickForgotPassword} variant="text">Forgot Password?</Button>
+                    <LoadingButton
+                        loading={loading}
                         type="submit"
                         fullWidth
                         variant="contained"
@@ -56,8 +76,9 @@ const PageLogin = () => {
                         style={{ marginTop: '24px' }}
                     >
                         Login
-                    </Button>
+                    </LoadingButton>
                 </form>
+                <Button style={{ marginTop: '24px' }} onClick={handleClickRegister} variant="text">Don't have an account? Register</Button>
             </Paper>
         </main>
     )
