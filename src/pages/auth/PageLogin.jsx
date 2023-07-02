@@ -15,7 +15,7 @@ const PageLogin = () => {
     const handleClickForgotPassword = (e) => {
         e.stopPropagation()
         e.preventDefault()
-        alert('Not Implemented')
+        navigate(`/auth/ForgotPassword${email.trim().length > 0 ? `?email=${email.trim()}` : ""}`)
     }
 
     const handleLogin = (e) => {
@@ -34,6 +34,8 @@ const PageLogin = () => {
         e.preventDefault()
         navigate('/auth/register')
     }
+
+
 
 
     return (
@@ -66,7 +68,7 @@ const PageLogin = () => {
                         value={password}
                         onChange={e => setPassword(e.target.value)}
                     />
-                    <Button sx={{ marginLeft: "auto" }} onClick={handleClickForgotPassword} variant="text">Forgot Password?</Button>
+                    <Button href="/auth/ForgotPassword" sx={{ marginLeft: "auto" }} onClick={handleClickForgotPassword} variant="text">Forgot Password?</Button>
                     <LoadingButton
                         loading={loading}
                         type="submit"
@@ -78,7 +80,7 @@ const PageLogin = () => {
                         Login
                     </LoadingButton>
                 </form>
-                <Button style={{ marginTop: '24px' }} onClick={handleClickRegister} variant="text">Don't have an account? Register</Button>
+                <Button href="/auth/register" style={{ marginTop: '24px' }} onClick={handleClickRegister} variant="text">Don't have an account? Register</Button>
             </Paper>
         </main>
     )

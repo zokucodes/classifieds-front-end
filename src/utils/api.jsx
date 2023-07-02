@@ -236,3 +236,83 @@ export async function SearchLocations(addError, DATA) {
         return HandleAPIError(err, addError, { message: `Failed to fetch locations`, type: DEBUG_VALUES.console.types.auth }, err?.response?.status)
     }
 }
+
+
+
+export async function ForgotPassword(addError, DATA) {
+    try {
+
+        try {
+            var errs = []
+
+            if (typeof DATA?.email !== 'string') {
+                errs.push({ code: 400, msg: `Email must be a string` })
+            } else if (!validator.isEmail(DATA.email)) {
+                errs.push({ code: 400, msg: `Email is not in the right format` })
+            }
+
+
+
+            if (errs.length > 0) {
+                AddErrorArrayToContext(errs, addError)
+                return { status: false, error: errs }
+            }
+
+        } catch (err) {
+            return { status: false, error: [{ msg: "Unspecified error" }] }
+        }
+        const dataToSend = FilterObjectByList(DATA, [
+            'email'
+        ])
+        const res = await axios.post(`${ENV_API_URL}/auth/ForgotPassword`, dataToSend)
+        DEBUG_WTC(DEBUG_VALUES.console.types.auth, `Send password reset request to ${DATA?.email}`, DEBUG_VALUES.console.colors.green)
+        return res.data
+    } catch (err) {
+        return HandleAPIError(err, addError, { message: `Failed to send password reset`, type: DEBUG_VALUES.console.types.auth }, err?.response?.status)
+    }
+}
+
+
+export async function ResetPasswordFromEmail(addError, DATA) {
+    try {
+
+        try {
+            var errs = []
+
+            if (typeof DATA?.token !== 'string') {
+                errs.push({ code: 400, msg: `Token must be a string` })
+            } else if (validator.isEmpty(DATA?.token)) {
+                errs.push({ code: 400, msg: "Token not set. Maybe you didn't copy the entire link?" })
+            }
+
+            if (typeof DATA?.new_password !== 'string') {
+                errs.push({ code: 400, msg: `Password must be a string` })
+            } else if (DATA.new_password.length < 8 || DATA.new_password.length > 255) {
+                errs.push({ code: 400, msg: `Password must be 8-255 characters long` })
+            } else {
+                if (DATA?.confirm_password != DATA.new_password) {
+                    errs.push({ code: 400, msg: `Confirm password does not match` })
+                }
+            }
+
+
+            if (errs.length > 0) {
+                AddErrorArrayToContext(errs, addError)
+                return { status: false, error: errs }
+            }
+
+        } catch (err) {
+            return { status: false, error: [{ msg: "Unspecified error" }] }
+        }
+        const dataToSend = FilterObjectByList(DATA, [
+            'token',
+            'new_password',
+            'confirm_password'
+        ])
+        const res = await axios.post(`${ENV_API_URL}/auth/ResetPasswordFromEmail`, dataToSend)
+        DEBUG_WTC(DEBUG_VALUES.console.types.auth, `Successfully reset password`, DEBUG_VALUES.console.colors.green)
+        return res.data
+    } catch (err) {
+        return HandleAPIError(err, addError, { message: `Failed to reset password`, type: DEBUG_VALUES.console.types.auth }, err?.response?.status)
+    }
+}

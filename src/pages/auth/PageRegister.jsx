@@ -83,13 +83,14 @@ const PageRegister = () => {
 
   const RegisterElements = () => {
     return (
-      <Paper className="lg:h-auto lg:w-[45vw] w-full h-full" style={{ padding: '24px', }}>
+      <Paper className="lg:h-auto lg:w-[45vw] w-full h-full overflow-y-auto" style={{ padding: '24px', }}>
         <Typography className='pb-12' variant="h4">Register</Typography>
         <form noValidate autoComplete="off" onSubmit={handleClickRegister}>
           <div className='flex flex-col lg:gap-x-4 items-start lg:flex-row'>
             <div className='lg:w-1/2'>
               <div className='mb-[8px] w-full'>
                 <DatePicker
+                  required
                   value={dob}
                   onChange={newValue => setDob(newValue)}
                   label="Date of Birth *" className='w-full' maxDate={dayjs(validDOBRange.max)} minDate={dayjs(validDOBRange.min)} />
@@ -199,7 +200,7 @@ const PageRegister = () => {
           </LoadingButton>
           <Typography variant='body2' className='pt-4'>By clicking Register, you agree to our Privacy Policy and Terms of Service.</Typography>
           <Divider className='py-4' />
-          <Button onClick={handleClickLogin} style={{ marginTop: '24px' }} variant="text">Already have an account? Login</Button>
+          <Button href="/auth/login" onClick={handleClickLogin} style={{ marginTop: '24px' }} variant="text">Already have an account? Login</Button>
         </form>
       </Paper>
     )
@@ -217,7 +218,7 @@ const PageRegister = () => {
           <Typography className='pt-8 pb-8' variant='body1'>Note: The email may take a few minutes to appear in your inbox.</Typography>
         </div>
 
-        <Button onClick={handleClickLogin} style={{ marginTop: '24px' }} variant="contained">Already verified? Login</Button>
+        <Button href="/auth/login" onClick={handleClickLogin} style={{ marginTop: '24px' }} variant="contained">Already verified? Login</Button>
       </Paper>
     )
   }

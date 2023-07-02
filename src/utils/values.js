@@ -1013,3 +1013,5 @@ export const VALID_VALUES = {
         type: ["STATE", "CITY"]
     }
 }
+
+export const ENV_SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL

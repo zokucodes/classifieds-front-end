@@ -25,13 +25,15 @@ import PageLogin from './pages/auth/PageLogin';
 import { ERROR_MESSAGE_STRINGS } from './utils/values';
 import { GetRandomIntInRange } from './utils/misc';
 import PageVerifyEmail from './pages/auth/PageVerifyEmail';
+import PageForgotPassword from './pages/auth/PageForgotPassword';
+import PageResetPassword from './pages/auth/PageResetPassword';
 
 const style = {
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  width: "auto",
   bgcolor: 'background.paper',
   border: '1px solid #000',
   boxShadow: 24,
@@ -210,6 +212,8 @@ function App() {
                 <Route path='register' element={<PageRegister />} />
                 <Route path='login' element={<PageLogin />} />
                 <Route path='VerifyEmail' element={<PageVerifyEmail />} />
+                <Route path='ForgotPassword' element={<PageForgotPassword />} />
+                <Route path='ResetPassword' element={<PageResetPassword />} />
 
               </Route>
             </Routes>
@@ -219,8 +223,6 @@ function App() {
 
               <>
                 <Modal
-                  aria-labelledby="transition-modal-title"
-                  aria-describedby="transition-modal-description"
                   open={gShowErrors}
                   onClose={handleClose}
                   slots={{ backdrop: Backdrop }}
@@ -232,13 +234,13 @@ function App() {
                 >
                   <Fade in={gShowErrors}>
                     <Box sx={style}>
-                      <Typography id="transition-modal-title" variant="h6" component="h2">
+                      <Typography variant="h6" fontWeight={"bold"} component="h2">
                         {errorCodeText()}
                       </Typography>
 
                       {
                         gErrors.map(data => (
-                          <Typography id="transition-modal-description" sx={{ mt: 2 }} key={data?.id}>{data?.msg}</Typography>
+                          <Typography sx={{ mt: 2 }} key={data?.id}>{data?.msg}</Typography>
                         ))
                       }
 
