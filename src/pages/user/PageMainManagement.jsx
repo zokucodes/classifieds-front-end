@@ -5,6 +5,8 @@ import MainPageTemplate from "../templates/MainPageTemplate"
 const PageMainManagement = () => {
     document.title = `Manage | ${ENV_APPNAME}`
 
+    
+
     return (
         <MainPageTemplate NAV_ENABLED={true}
             ELEMENTS={

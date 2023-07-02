@@ -220,7 +220,7 @@ function App() {
               <Route path="/app">
                 <Route path="manage">
                   <Route path='' element={<PageMainManagement />} />
-
+                  <Route path='*' element={<PageMainManagement />} />
                 </Route>
               </Route>
 

@@ -3,6 +3,7 @@ import BaseManagementComponent from "./BaseManagementComponent"
 import { useState } from "react"
 
 const UserSettingsManagementComponent = () => {
+    window.history.replaceState(null, "Listings", "/app/manage/settings")
 
     const [email, setEmail] = useState("")
 

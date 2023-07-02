@@ -316,3 +316,46 @@ export async function ResetPasswordFromEmail(addError, DATA) {
         return HandleAPIError(err, addError, { message: `Failed to reset password`, type: DEBUG_VALUES.console.types.auth }, err?.response?.status)
     }
 }
+
+
+
+
+
+export async function GetStaticData(addError, DATA) {
+    try {
+
+        try {
+            var errs = []
+
+
+            if (
+                DATA?.type != "CATEGORY_DEPTH_0" &&
+                DATA?.type != "CATEGORY_DEPTH_1" &&
+                DATA?.type != "CATEGORY_DEPTH_2" &&
+                DATA?.type != "GET_SUB_CATEGORIES_BY_ID" &&
+                DATA?.type != "GET_ALL_CATEGORIES" &&
+                DATA?.type != "GET_ALL_CATEGORIES_HIERARCHICAL"
+            ) {
+                errs.push({ code: 400, msg: `Type is invalid` })
+            }
+
+
+
+            if (errs.length > 0) {
+                AddErrorArrayToContext(errs, addError)
+                return { status: false, error: errs }
+            }
+
+        } catch (err) {
+            return { status: false, error: [{ msg: "Unspecified error" }] }
+        }
+        const dataToSend = FilterObjectByList(DATA, [
+            'type'
+        ])
+        const res = await axios.get(`${ENV_API_URL}/utils/data/GetStaticData`, { params: dataToSend })
+        DEBUG_WTC(DEBUG_VALUES.console.types.auth, `Fetched ${res.data.content.length} data`, DEBUG_VALUES.console.colors.green)
+        return res.data
+    } catch (err) {
+        return HandleAPIError(err, addError, { message: `Failed to fetch data`, type: DEBUG_VALUES.console.types.auth }, err?.response?.status)
+    }
+}

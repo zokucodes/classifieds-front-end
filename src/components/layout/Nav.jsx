@@ -77,7 +77,7 @@ export default function Nav() {
     React.useLayoutEffect(() => {
         setInterval(() => {
             setSearchPlaceholder(GetRandomItemFromArray(PLACEHOLDERS.searchListings.searchTerms))
-        }, 5000)
+        }, 8000)
     }, [])
 
     const handleProfileMenuOpen = (event) => {

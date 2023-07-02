@@ -4,7 +4,7 @@ import EditIcon from '@mui/icons-material/Edit';
 const ListingContainer = ({ listing }) => {
     return (
         <Card className="lg:w-[23%] w-full h-[65vh]" variant="outlined" sx={{ position: "relative" }}>
-            <div className="h-[42%] px-4 pt-4 w-full">
+            <div className="h-[42%] px-4 pt-4 w-full relative">
                 <CardMedia
                     component="img"
                     sx={{ objectFit: "contain" }}
@@ -12,6 +12,18 @@ const ListingContainer = ({ listing }) => {
                     src={listing?.cover_image}
                     alt={listing?.title}
                 />
+                {
+                    listing?.status == "PENDING" && (
+                        <div className=" h-full w-full absolute px-4 pt-4 top-0 bottom-0 right-0 left-0">
+                            <div className=" h-full w-full bg-white bg-opacity-60 flex items-center justify-center">
+                                <Typography color="primary" fontWeight={"bold"} variant="h2">
+                                    PENDING
+                                </Typography>
+                            </div>
+                        </div>
+                    )
+                }
+
             </div>
 
             <CardContent sx={{ textAlign: "left", paddingBottom: 8 }}>
@@ -33,7 +45,7 @@ const ListingContainer = ({ listing }) => {
                         Listed {listing?.creation_time} days ago
                     </Typography>
                 </div>
-                <div className="flex w-full flex-row h-full gap-1">
+                <div className="flex w-full items-center justify-between !mx-auto flex-row h-full gap-1">
                     <Button fullWidth variant="contained" sx={{ height: '100%' }}>View</Button>
                     <Button variant="contained" color="primary" sx={{ minWidth: 'fit-content' }}>
                         <EditIcon />

@@ -188,3 +188,71 @@ export function TrimStringToLength(text, max_length) {
     }
 
 }
+
+
+export function ChangeKeyName(obj, from = 'name', to = 'label') {
+    if (typeof obj !== 'object' || obj === null) {
+        return obj;
+    }
+
+    if (Array.isArray(obj)) {
+        return obj.map(item => ChangeKeyName(item));
+    }
+
+    const newObj = {};
+    for (const key in obj) {
+        if (key === from) {
+            newObj[to] = ChangeKeyName(obj[key]);
+        } else {
+            newObj[key] = ChangeKeyName(obj[key]);
+        }
+    }
+    return newObj;
+}
+
+
+export async function FileChange(e, max_size, allowed_filetypes = ['image'], max_files) {
+    var files
+
+    if (!e.target.files || e.target.files.length == 0) {
+        if (e?.clipboardData?.files?.length == 0) {
+            return { status: false, error: [{ msg: 'No files selected' }] }
+        }
+        files = e.clipboardData.files
+    } else {
+        files = e.target.files
+    }
+
+    if (max_files != null) {
+        if (files.length > max_files) {
+            return { status: false, error: [{ msg: 'Maximum number of files reached' }] }
+        }
+    }
+
+
+    var files_return = []
+    for (var file of files) {
+        if (file.size > (max_size || 10485760)) {
+            return { status: false, error: [{ msg: 'Media must be less than 10 MB' }] }
+        }
+
+        for (var filetype of allowed_filetypes) {
+            if (!file.type.includes(filetype)) {
+                allowed_filetypes = allowed_filetypes.join(', ')
+                return { status: false, error: [{ msg: `Only ${allowed_filetypes} files are allowed` }] }
+            }
+        }
+
+        const reader = new FileReader();
+        if (file) {
+            reader.readAsDataURL(file);
+            await new Promise(resolve => reader.onload = () => resolve())
+            files_return.push({ id: MakeID(10), render: reader.result, file, name: file?.name, type: file.type, uploadProgress: 0 })
+        }
+
+    }
+    return { status: true, content: files_return }
+
+
+
+}

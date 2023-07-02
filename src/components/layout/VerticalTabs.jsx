@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import UserSettingsManagementComponent from '../management/UserSettingsManagementComponent';
 import UserListingsManagementComponent from '../management/UserListingsManagementComponent';
+import CreateListingManagementComponent from '../management/CreateListingManagementComponent';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -72,8 +73,8 @@ export default function VerticalTabs() {
             <TabPanel className="overflow-y-auto overflow-x-hidden w-full" value={value} index={1}>
                 <UserListingsManagementComponent />
             </TabPanel>
-            <TabPanel value={value} index={2}>
-                Item Three
+            <TabPanel className="overflow-y-auto overflow-x-hidden w-full" value={value} index={2}>
+                <CreateListingManagementComponent />
             </TabPanel>
             <TabPanel value={value} index={3}>
                 Item Four
