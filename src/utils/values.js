@@ -1034,3 +1034,23 @@ export const VALID_VALUES = {
     }
 }
 
+
+
+
+export const MIN_MAX_VALUES = {
+    listing: {
+        title: { min: 5, max: 64 },
+        description: { min: 0, max: 512 }
+    },
+    searchLocations: {
+        query: { min: 2, max: 32 }
+    },
+    password: {
+        length: { min: 8, max: 255 }
+    },
+    store: {
+        name: { min: 1, max: 64 },
+        description: { min: 0, max: 255 },
+        categories: { min: 1, max: 10 }
+    }
+}

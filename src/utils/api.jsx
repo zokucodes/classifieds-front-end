@@ -1,8 +1,8 @@
 import axios from 'axios'
 import validator from 'validator'
 import { DEBUG_VALUES, DEBUG_WTC } from './debug'
-import { DateInRange, FilterObjectByList } from './misc'
-import { GetValidDOBRange, VALID_VALUES } from './values'
+import { DateInRange, FilterObjectByList, IsValueInRange } from './misc'
+import { GetValidDOBRange, MIN_MAX_VALUES, VALID_VALUES } from './values'
 
 const ENV_API_URL = import.meta.env.VITE_API_URL
 
@@ -357,5 +357,63 @@ export async function GetStaticData(addError, DATA) {
         return res.data
     } catch (err) {
         return HandleAPIError(err, addError, { message: `Failed to fetch data`, type: DEBUG_VALUES.console.types.auth }, err?.response?.status)
+    }
+}
+
+
+export async function GetMyStores(addError) {
+    try {
+        const res = await axios.get(`${ENV_API_URL}/stores/GetMyStores`, { withCredentials: true })
+        DEBUG_WTC(DEBUG_VALUES.console.types.auth, `Successfully fetched stores`, DEBUG_VALUES.console.colors.green)
+        return res.data
+    } catch (err) {
+        return HandleAPIError(err, addError, { message: `Failed to fetch stores`, type: DEBUG_VALUES.console.types.auth }, err?.response?.status)
+    }
+}
+
+
+
+export async function CreateStore(addError, DATA) {
+    try {
+
+        try {
+            var errs = []
+
+            if (typeof DATA?.name !== 'string') {
+                errs.push({ code: 400, msg: `Name must be a string` })
+            } else if (IsValueInRange(MIN_MAX_VALUES.store.name.min, MIN_MAX_VALUES.store.name.max, DATA.name)) {
+                errs.push({ code: 400, msg: `Name must be ${MIN_MAX_VALUES.store.name.min}-${MIN_MAX_VALUES.store.name.max} characters long` })
+            }
+
+            if (typeof DATA?.description === 'string') {
+                if (IsValueInRange(MIN_MAX_VALUES.store.description.min, MIN_MAX_VALUES.store.description.max, DATA.description)) {
+                    errs.push({ code: 400, msg: `Description must be ${MIN_MAX_VALUES.store.description.min}-${MIN_MAX_VALUES.store.description.max} characters long` })
+                }
+            }
+
+
+            if (DATA?.categories?.length == 0) {
+                errs.push({ code: 400, msg: `Categories must contain a minimum of ${MIN_MAX_VALUES.store.categories.min} items and a maximum of ${MIN_MAX_VALUES.store.categories.max} items` })
+
+            }
+
+            if (errs.length > 0) {
+                AddErrorArrayToContext(errs, addError)
+                return { status: false, error: errs }
+            }
+
+        } catch (err) {
+            return { status: false, error: [{ msg: "Unspecified error" }] }
+        }
+        const dataToSend = FilterObjectByList(DATA, [
+            'name',
+            'description',
+            'categories'
+        ])
+        const res = await axios.post(`${ENV_API_URL}/stores/CreateStore`, dataToSend, { withCredentials: true })
+        DEBUG_WTC(DEBUG_VALUES.console.types.auth, `Successfully created store`, DEBUG_VALUES.console.colors.green)
+        return res.data
+    } catch (err) {
+        return HandleAPIError(err, addError, { message: `Failed to create store`, type: DEBUG_VALUES.console.types.auth }, err?.response?.status)
     }
 }

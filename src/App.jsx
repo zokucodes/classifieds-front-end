@@ -28,6 +28,8 @@ import PageVerifyEmail from './pages/auth/PageVerifyEmail';
 import PageForgotPassword from './pages/auth/PageForgotPassword';
 import PageResetPassword from './pages/auth/PageResetPassword';
 import PageMainManagement from './pages/user/PageMainManagement';
+import AuthWrapper from './components/auth/AuthWrapper';
+import { PageStore } from './pages/stores/PageStore';
 
 const style = {
   position: 'absolute',
@@ -133,7 +135,7 @@ const getDesignTokens = (mode) => ({
 
 
 function App() {
-  const { gErrors, gShowErrors, gSetShowErrors, gClearErrors, gSetColorMode, gColorMode } = useGlobalContext()
+  const { gErrors, gSnackbars, gSnackbarsOpen, gItems, gShowErrors, gSetShowErrors, gClearErrors, gSetColorMode, gColorMode } = useGlobalContext()
 
   const handleClose = () => {
     gSetShowErrors(false)
@@ -219,13 +221,33 @@ function App() {
               </Route>
               <Route path="/app">
                 <Route path="manage">
-                  <Route path='' element={<PageMainManagement />} />
-                  <Route path='*' element={<PageMainManagement />} />
+                  <Route path='' element={<AuthWrapper><PageMainManagement /></AuthWrapper>} />
+                  <Route path='*' element={<AuthWrapper><PageMainManagement /></AuthWrapper>} />
                 </Route>
+                <Route path="store/:id" element={<PageStore />} />
               </Route>
 
             </Routes>
           </div>
+          {
+            gItems.length > 0 && (
+              gItems.map((data, i) => (
+
+                <div key={i}>
+                  {data}
+                </div>
+
+              ))
+            )
+          }
+          {
+
+            gSnackbarsOpen && gSnackbars.length > 0 && (
+              gSnackbars.map(data => (
+                data
+              ))
+            )
+          }
           {
             gErrors.length > 0 && (
 

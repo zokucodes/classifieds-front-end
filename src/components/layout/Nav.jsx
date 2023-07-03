@@ -251,14 +251,21 @@ export default function Nav() {
                                     >
                                         <AccountCircle />
                                     </IconButton>
+                                    <IconButton color='inherit' onClick={gToggleColorMode}>
+                                        {
+                                            gColorMode == "light" ? (
+                                                <Brightness7Icon />
+                                            ) : (
+                                                <Brightness4Icon />
+                                            )
+                                        }
+
+                                    </IconButton>
                                 </>
                             ) : (
                                 <div className='flex flex-row gap-3'>
                                     <Button variant='contained'>Login</Button>
                                     <Button variant='contained'>Register</Button>
-                                    {
-
-                                    }
                                     <IconButton color='inherit' onClick={gToggleColorMode}>
                                         {
                                             gColorMode == "light" ? (

@@ -256,3 +256,32 @@ export async function FileChange(e, max_size, allowed_filetypes = ['image'], max
 
 
 }
+
+
+export function CompareStringsIgnoringPunctuation(str1, str2, mode = "INCLUDES") {
+
+    if (!str1 || !str2) {
+        return false
+    }
+    const punctuationRegex =  /[^\w\s]|_/g;
+    const cleanStr1 = str1.toLowerCase().replace(punctuationRegex, '');
+    const cleanStr2 = str2.toLowerCase().replace(punctuationRegex, '');
+    if (mode == "INCLUDES") {
+        return cleanStr1.includes(cleanStr2);
+    } else {
+        return cleanStr1 === cleanStr2;
+    }
+
+}
+
+
+export function IsValueInRange(low, high, value) {
+    if (low == null) {
+        return (value <= high)
+    }
+    if (high == null) {
+        return (value >= low)
+    }
+
+    return (value >= low && value <= high)
+}

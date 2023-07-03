@@ -28,6 +28,14 @@ const PageLogin = () => {
         setLoading(true)
         Login(gAddErrors, { email, password }).then(res => {
             console.log(res)
+            if (res.status == true) {
+                localStorage.setItem('user_id', res.content.user.user_id)
+                localStorage.setItem('first_name', res.content.user.first_name)
+                localStorage.setItem('last_name', res.content.user.last_name)
+                localStorage.setItem('pfp_url', res.content.user.pfp_url)
+
+                window.location = `/app/manage`
+            }
         }).finally(() => {
             setLoading(false)
         })
@@ -43,7 +51,7 @@ const PageLogin = () => {
 
 
     return (
-        <MainPageTemplate ELEMENTS={
+        <MainPageTemplate>
             <Paper className="lg:h-auto lg:w-[40vw] w-full h-full" style={{ padding: '24px', }}>
                 <Typography className='pb-12' variant="h4">Login</Typography>
                 <form className='w-full flex flex-col' noValidate autoComplete="off" onSubmit={handleLogin}>
@@ -85,7 +93,7 @@ const PageLogin = () => {
                 </form>
                 <Button href="/auth/register" style={{ marginTop: '24px' }} onClick={handleClickRegister} variant="text">Don't have an account? Register</Button>
             </Paper>
-        } />
+        </MainPageTemplate>
 
     )
 }

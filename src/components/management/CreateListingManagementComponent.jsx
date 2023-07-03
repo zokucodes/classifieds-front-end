@@ -1,24 +1,26 @@
 import { Autocomplete, Avatar, Backdrop, Box, Button, CircularProgress, ImageList, ImageListItem, TextField, Typography } from "@mui/material"
 import BaseManagementComponent from "./BaseManagementComponent"
-import { useLayoutEffect, useRef, useState } from "react"
+import React, { useLayoutEffect, useRef, useState } from "react"
 import ListingContainer from "../listings/ListingContainer"
 import CreateIcon from '@mui/icons-material/Create';
-import { GetStaticData } from "../../utils/api";
 import { useGlobalContext } from "../../contexts/GlobalContext";
 import { ChangeKeyName, FileChange } from "../../utils/misc";
 import Grid from '@mui/material/Unstable_Grid2';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import { useApiContext } from "../../contexts/ApiContext";
 
 const CreateListingManagementComponent = () => {
     window.history.replaceState(null, "Create New Listing", "/app/manage/listings")
 
     const { gAddErrors } = useGlobalContext()
+    const { aGetCategories, aCategories } = useApiContext()
 
-    const [categories, setCategories] = useState([])
     const [selectedCategory, setSelectedCategory] = useState(null)
     const [selectedSubCategory, setSelectedSubCategory] = useState(null)
 
     const [selectedFiles, setSelectedFiles] = useState([])
+
+    const [loadingCats, setLoadingCats] = useState(true)
 
     const uploadRef = useRef(null)
 
@@ -52,12 +54,8 @@ const CreateListingManagementComponent = () => {
     }
 
     useLayoutEffect(() => {
-        GetStaticData(gAddErrors, { type: "GET_ALL_CATEGORIES" }).then(res => {
-            if (res.status == true) {
-                res.content.splice(0, 1)
-                setCategories(res.content)
-            }
-        })
+        aGetCategories().finally(() => setLoadingCats(false))
+
     }, [])
 
 
@@ -87,7 +85,7 @@ const CreateListingManagementComponent = () => {
                                 open={true}
                             >
                                 <CircularProgress size={80} variant="determinate" value={100} />
-                                <Typography  sx={{
+                                <Typography sx={{
                                     position: 'absolute'
                                 }} variant="h6" color="text.secondary">
                                     {`${Math.round(100)}%`}
@@ -132,17 +130,30 @@ const CreateListingManagementComponent = () => {
                         <Autocomplete
                             disablePortal
                             fullWidth
+                            loading={loadingCats}
                             value={selectedCategory}
                             onChange={(e, newValue) => {
                                 setSelectedCategory(newValue)
                             }}
                             getOptionLabel={(option) => option?.name}
-                            options={categories.filter(obj => !obj.root_category_id && !obj.parent_category_id)}
+                            options={aCategories.filter(obj => !obj.root_category_id && !obj.parent_category_id)}
                             sx={{ marginTop: "16px", marginBottom: "8px" }}
-                            renderInput={(params) => <TextField {...params} label="Select a category..." />}
+                            renderInput={(params) => <TextField {...params} label="Select a category..."
+                                InputProps={{
+                                    ...params.InputProps,
+                                    endAdornment: (
+                                        <React.Fragment>
+                                            {loadingCats ? (
+                                                <CircularProgress color="inherit" size={20} />
+                                            ) : null}
+                                            {params.InputProps.endAdornment}
+                                        </React.Fragment>
+                                    )
+                                }} />}
                         />
                         <Autocomplete
                             disabled={!selectedCategory}
+                            loading={loadingCats}
                             disablePortal
                             fullWidth
                             value={selectedSubCategory}
@@ -150,13 +161,25 @@ const CreateListingManagementComponent = () => {
                                 setSelectedSubCategory(newValue)
                             }}
                             groupBy={(option) => {
-                                const parent_name = categories.find(obj => (obj.id == option.parent_category_id) && option.parent_category_id)
+                                const parent_name = aCategories.find(obj => (obj.id == option.parent_category_id) && option.parent_category_id)
                                 return parent_name?.name
                             }}
                             getOptionLabel={(option) => option?.name}
-                            options={categories.filter(obj => obj.root_category_id == selectedCategory?.id)}
+                            options={aCategories.filter(obj => obj.root_category_id == selectedCategory?.id)}
                             sx={{ marginTop: "16px", marginBottom: "8px" }}
-                            renderInput={(params) => <TextField {...params} label={!selectedCategory ? "Select a category above first..." : "Select a sub category..."} />}
+                            renderInput={(params) => <TextField {...params} label={!selectedCategory ? "Select a category above first..." : "Select a sub category..."}
+                                InputProps={{
+                                    ...params.InputProps,
+                                    endAdornment: (
+                                        <React.Fragment>
+                                            {loadingCats ? (
+                                                <CircularProgress color="inherit" size={20} />
+                                            ) : null}
+                                            {params.InputProps.endAdornment}
+                                        </React.Fragment>
+                                    )
+                                }}
+                            />}
                         />
                     </div>
 
