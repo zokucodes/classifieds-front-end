@@ -417,3 +417,36 @@ export async function CreateStore(addError, DATA) {
         return HandleAPIError(err, addError, { message: `Failed to create store`, type: DEBUG_VALUES.console.types.auth }, err?.response?.status)
     }
 }
+
+
+
+export async function GetStoreByID(addError, DATA) {
+    try {
+
+        try {
+            var errs = []
+
+
+            if (!Number.isInteger(DATA?.store_id)) {
+                errs.push({ code: 400, msg: `Store ID must be an integer` })
+            }
+
+
+            if (errs.length > 0) {
+                AddErrorArrayToContext(errs, addError)
+                return { status: false, error: errs }
+            }
+
+        } catch (err) {
+            return { status: false, error: [{ msg: "Unspecified error" }] }
+        }
+        const dataToSend = FilterObjectByList(DATA, [
+            'store_id'
+        ])
+        const res = await axios.get(`${ENV_API_URL}/stores/GetStoreByID`, { params: dataToSend })
+        DEBUG_WTC(DEBUG_VALUES.console.types.auth, `Fetched store`, DEBUG_VALUES.console.colors.green)
+        return res.data
+    } catch (err) {
+        return HandleAPIError(err, addError, { message: `Failed to fetch store`, type: DEBUG_VALUES.console.types.auth }, err?.response?.status)
+    }
+}

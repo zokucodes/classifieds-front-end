@@ -13,14 +13,14 @@ import { useApiContext } from "../../contexts/ApiContext";
 const UserStoresManagementComponent = () => {
     window.history.replaceState(null, "My Stores", "/app/manage/stores")
 
-    const { gStores, gAddItems } = useGlobalContext()
+    const { gStores, gOnlyMyStores, gAddItems } = useGlobalContext()
     const { aGetMyStores } = useApiContext()
 
     const [loadingStores, setLoadingStores] = useState(true)
 
     const [searchText, setSearchText] = useState("")
 
-    const [stores, setStores] = useState(gStores || [])
+    const [stores, setStores] = useState(gOnlyMyStores() || [])
 
     useLayoutEffect(() => {
         aGetMyStores().finally(() => {
@@ -58,14 +58,14 @@ const UserStoresManagementComponent = () => {
         if (searchText.trim().length > 0) {
             filterStoresBySearchQuery()
         } else {
-            setStores(gStores)
+            setStores(gOnlyMyStores())
         }
 
     }, [searchText])
 
     useEffect(() => {
 
-        setStores(gStores)
+        setStores(gOnlyMyStores())
 
     }, [gStores])
 

@@ -1,14 +1,12 @@
-import { CssBaseline } from "@mui/material"
 import Nav from "../../components/layout/Nav"
 
 const MainPageTemplate = ({ children, NAV_ENABLED }) => {
     return (
         <>
             <main className='flex flex-col relative items-center justify-center lg:h-auto !h-full'>
-                <CssBaseline />
                 {
                     NAV_ENABLED && (
-                        <div className="absolute top-0 w-full">
+                        <div className="absolute top-0 w-full z-30">
                             <Nav />
                         </div>
                     )

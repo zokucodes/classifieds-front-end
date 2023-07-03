@@ -12,6 +12,7 @@ import {
   Modal,
   Fade,
   Box,
+  CssBaseline,
 } from '@mui/material';
 import './App.css'
 import { useGlobalContext } from './contexts/GlobalContext'
@@ -200,10 +201,12 @@ function App() {
   }
 
   return (
-    <ThemeProvider theme={theme}>
 
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       <LocalizationProvider adapterLocale='en-gb' dateAdapter={AdapterDayjs}>
         <Router>
+
           <header>
             {/* <NavBar /> */}
           </header>

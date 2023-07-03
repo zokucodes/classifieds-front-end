@@ -152,30 +152,44 @@ export const useGlobal = () => {
 
     //#region Stores
 
+    function gGetStoreIndexByID(store_id) {
+        for (let i = 0; i < stores.length; i++) {
+            if (stores[i].id == store_id) {
+                return i
+            }
+
+        }
+        return null
+    }
+
     function gAddStores(data) {
         if (!Array.isArray(data)) {
-            data = [data]
+            data = [data];
         }
         setStores((prevStores) => {
-            var newStores = [...prevStores]
-            let foundStore = false
-            for (let i = 0; i < newStores.length; i++) {
-                for (var store of stores) {
-                    if (newStores[i].id == store.id) {
-                        foundStore = true
-                        break
+            var newStores = [...prevStores];
+            for (var store of data) {
+                let foundStore = false;
+                for (let i = 0; i < newStores.length; i++) {
+                    if (newStores[i].id === store.id) {
+                        newStores[i] = store;
+                        foundStore = true;
+                        break;
                     }
                 }
-
+                if (!foundStore) {
+                    newStores.unshift(store);
+                }
             }
-
-            if (!foundStore) {
-                newStores = [...data, ...newStores]
-            }
-
-            return newStores
+            return newStores;
         });
     }
+
+
+    function gOnlyMyStores() {
+        return stores.filter(obj => obj?.am_i_member == true)
+    }
+
 
     function gRemoveStoreByID(id) {
         setStores(prevStores => {
@@ -222,11 +236,13 @@ export const useGlobal = () => {
             gSetColorMode: setColorMode,
             gToggleColorMode,
 
+            gOnlyMyStores,
             gFetchedMyStores: fetchedMyStores,
             gSetFetchedMyStores: setFetchedMyStores,
             gStores: stores,
             gAddStores,
-            gRemoveStoreByID
+            gRemoveStoreByID,
+            gGetStoreIndexByID
 
         }
     );

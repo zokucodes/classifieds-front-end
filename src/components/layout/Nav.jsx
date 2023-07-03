@@ -21,6 +21,7 @@ import RoomIcon from '@mui/icons-material/Room';
 import { ENV_APPNAME, GetRandomItemFromArray, PLACEHOLDERS } from '../../utils/values';
 import { Button, Divider, Paper } from '@mui/material';
 import { useGlobalContext } from '../../contexts/GlobalContext';
+import { useNavigate } from 'react-router-dom';
 
 const user_id = localStorage.getItem('user_id')
 
@@ -65,6 +66,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function Nav() {
+    const navigate = useNavigate()
     const { gToggleColorMode, gColorMode } = useGlobalContext()
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -97,10 +99,16 @@ export default function Nav() {
         setMobileMoreAnchorEl(event.currentTarget);
     };
 
+    const handleClickMyStores = (e) => {
+        e.stopPropagation()
+        e.preventDefault()
+        navigate('/app/manage')
+    }
+
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
         <Menu
-            sx={{ mt: '56px' }}
+            sx={{ mt: '56px', zIndex: 50 }}
             anchorEl={anchorEl}
             anchorOrigin={{
                 vertical: 'top',
@@ -119,7 +127,7 @@ export default function Nav() {
             <MenuItem onClick={handleMenuClose}>My Account</MenuItem>
             <MenuItem onClick={handleMenuClose}>Messages</MenuItem>
             <MenuItem onClick={handleMenuClose}>My Listings</MenuItem>
-            <MenuItem onClick={handleMenuClose}>My Stores</MenuItem>
+            <MenuItem onClick={handleClickMyStores}>My Stores</MenuItem>
             <MenuItem onClick={handleMenuClose}>Settings</MenuItem>
         </Menu>
     );

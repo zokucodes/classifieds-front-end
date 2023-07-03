@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useGlobalContext } from "../contexts/GlobalContext"
-import { CreateStore, GetMyStores, GetStaticData } from "../utils/api"
+import { CreateStore, GetMyStores, GetStaticData, GetStoreByID } from "../utils/api"
 
 export const useApi = () => {
     const { gLoggedIn, gAddErrors, gAddStores, gAddSnackbar, gSetSnackbarsOpen, setFetched,
@@ -25,6 +25,10 @@ export const useApi = () => {
             const res = await GetMyStores(gAddErrors)
 
             if (res.status == true) {
+                for (let i = 0; i < res.content.length; i++) {
+                    res.content[i].am_i_member = true
+                    
+                }
                 gAddStores(res.content)
                 gSetFetchedMyStores(true)
                 return res
@@ -34,10 +38,20 @@ export const useApi = () => {
 
     }
 
+    async function aGetStoreByID(data) {
+        const res = await GetStoreByID(gAddErrors, data)
+        if (res.status == true) {
+            gAddStores(res.content)
+            return res
+        }
+        return res
+    }
+
     async function aCreateStore(data, progress_function, snack_on_success) {
         const res = await CreateStore(gAddErrors, data)
 
         if (res.status == true) {
+            res.content.am_i_member = true
             gAddStores(res.content)
             if (snack_on_success) {
                 gAddSnackbar(res)
@@ -51,7 +65,8 @@ export const useApi = () => {
         aCategories: categories,
         aGetCategories,
         aGetMyStores,
-        aCreateStore
+        aCreateStore,
+        aGetStoreByID
 
 
     }

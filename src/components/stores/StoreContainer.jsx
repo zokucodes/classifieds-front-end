@@ -16,15 +16,22 @@ const StoreContainer = ({ store }) => {
                 </div>
 
                 <div className="flex flex-col h-full py-4">
-                    <Typography variant="h3" className="text-left">{store?.name || "Untitled Store"} <Typography variant="h3" fontWeight={"bold"} sx={{display: "inline-block"}}>{store?.status != "PUBLISHED" && "(Not Published)"}</Typography></Typography>
+                    <Typography variant="h3" className="text-left">{store?.name || "Untitled Store"} <Typography variant="h3" fontWeight={"bold"} sx={{ display: "inline-block" }}>{store?.status != "PUBLISHED" && "(Not Published)"}</Typography></Typography>
                     <Typography variant="body1" className="text-left">{store?.description || "(No description)"}</Typography>
 
                     <div className="mt-auto flex flex-row gap-2">
                         {
                             store?.categories?.length > 0 && (
-                                store.categories.map((data, i) => (
-                                    <Chip color="info" key={i} label={data?.name} />
-                                ))
+                                store.categories.map((data, i) => {
+                                    if (i <= 3) {
+                                        return (
+                                            (
+                                                <Chip color="info" key={i} label={data?.name} />
+                                            )
+                                        )
+                                    }
+
+                                })
                             )
                         }
                     </div>

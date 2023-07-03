@@ -31,7 +31,7 @@ export const CreateStoreModal = () => {
         e.stopPropagation()
         e.preventDefault()
         if (selectedCategories.length > 0) {
-            if (!IsValueInRange(MIN_MAX_VALUES.store.categories.min, MIN_MAX_VALUES.store.categories.max, selectedCategories.length)) {
+            if (!IsValueInRange(MIN_MAX_VALUES.store.categories.min, MIN_MAX_VALUES.store.categories.max, selectedCategories.length + 1)) {
                 setCatError(true)
                 return
             }

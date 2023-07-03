@@ -1,21 +1,26 @@
 import MainPageTemplate from "../templates/MainPageTemplate"
-import React from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
 import { Avatar, Box, Card, CardContent, Container, Grid, Tab, Tabs, Typography } from "@mui/material";
 import { blue } from "@mui/material/colors";
 import VerticalTabs from "../../components/layout/VerticalTabs";
+import { StorePage } from "../../components/stores/StorePage";
+import { useApiContext } from "../../contexts/ApiContext";
+import { useGlobalContext } from "../../contexts/GlobalContext";
+import { useParams } from "react-router-dom";
 //import Container, { Card, CardContent, Typography, Tabs, Tab, Grid } from '@mui/material';
 
 const useStyles = makeStyles((theme) => ({
     container: {
         width: "100%",
         height: "100%",
-        maxWidth: "100%"
+        display: "flex",
+        flexDirection: "column"
     },
     banner: {
         height: '25vh',
         position: 'relative',
-        backgroundColor: '#e0e0e0', // Placeholder background color
+        backgroundColor: '#e0e0e0', // Placeholder background color,
     },
     circleImage: {
         width: 150,
@@ -28,7 +33,11 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: '#fff', // Placeholder background color
     },
     content: {
-        marginTop: theme.spacing(2),
+        flex: 1,
+        // marginTop: theme.spacing(2),
+        overflowY: "auto", // Enable scrolling for content
+        display: "flex", // Add this line
+        height: "calc(100% - 25vh)"
     },
     leftPanel: {
         backgroundColor: '#f0f0f0', // Placeholder background color
@@ -45,77 +54,110 @@ const useStyles = makeStyles((theme) => ({
         transform: 'translateY(-50%)',
         maxWidth: 300,
     },
+    content2: {
+        paddingTop: theme.spacing(2),
+        paddingBottom: theme.spacing(2)
+    }
 }));
 
-
-
 export const PageStore = () => {
+    const { id } = useParams();
+    const store_id = parseInt(id)
     const classes = useStyles();
 
-    const handleChangeTab = (event, newValue) => {
-        // Handle tab change here
-    };
+    const { aGetStoreByID } = useApiContext()
+    const { gGetStoreIndexByID, gStores } = useGlobalContext()
+
+    const [storeIndex, setStoreIndex] = useState(null)
+
+    const [loadingStore, setLoadingStore] = useState(true)
 
 
+    useLayoutEffect(() => {
+        aGetStoreByID({ store_id })
+            .then(res => {
+                if (res.status == true) {
+                    setStoreIndex(gGetStoreIndexByID(store_id))
+                }
+            })
+            .finally(() => setLoadingStore(false))
+    }, [])
+
+    useEffect(() => {
+        if (storeIndex == null) {
+            setStoreIndex(gGetStoreIndexByID(store_id))
+        }
+    }, [gStores])
 
     return (
         <MainPageTemplate NAV_ENABLED={true}>
-            <Container className={`${classes.container} !max-w-full lg:!max-w-[90%]`}>
-                <Box style={{
-                    backgroundPosition: "center center",
-                    backgroundSize: "contain",
-                    backgroundRepeat: "no-repeat",
-                    backgroundImage: "url('https://smsoft.co.in/wp-content/uploads/2020/01/SM-BANNER-1.jpg')"
-                }} className={classes.banner}>
-                    <Avatar sx={{ width: 150, height: 150, fontSize: 80, bgcolor: blue[500] }} className={classes.circleImage} >
-                        Q
-                    </Avatar>
-                    <Card className={classes.card}>
-                        <CardContent>
-                            <Typography variant="h6" component="h2">
-                                Card Title
-                            </Typography>
-                            <Typography color="textSecondary" gutterBottom>
-                                Card Subtitle
-                            </Typography>
-                            <Typography variant="body2" component="p">
-                                Card Content
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Box>
-                <Card className={classes.content} variant="outlined">
-                    <VerticalTabs
-                        tabWidth={"27rem"}
-                        items={[
-                            {
-                                title: "Laptops",
-                                element: (<p></p>)
-                            },
-                            
-                        ]}
-                    />
-                </Card>
-                {/* <Grid container className={classes.content}>
-                    <Grid item xs={3}>
-                        <Tabs
-                            orientation="vertical"
-                            variant="scrollable"
-                            value={0} // Set the initial selected tab index here
-                            onChange={handleChangeTab}
-                            aria-label="Vertical tabs"
-                        >
-                            <Tab label="Tab 1" />
-                            <Tab label="Tab 2" />
-                            <Tab label="Tab 3" />
-                        </Tabs>
-                    </Grid>
-                    <Grid item xs={9}>
-                        <div className={classes.rightPanel}></div>
-                    </Grid>
-                </Grid> */}
+            <Container className={`${classes.container} !max-w-full !max-h-full`}>
+                {
+                    loadingStore ? (
+                        <p>Loading</p>
+                    ) : (
+                        <>
+                            <Box
+                                style={{
+                                    backgroundPosition: "center center",
+                                    backgroundSize: "contain",
+                                    backgroundRepeat: "no-repeat",
+                                    backgroundImage:
+                                        "url('https://smsoft.co.in/wp-content/uploads/2020/01/SM-BANNER-1.jpg')",
+                                }}
+                                className={classes.banner}
+                            >
+                                <Avatar
+                                    src={gStores[storeIndex]?.icon_url}
+                                    sx={{ width: 150, height: 150, fontSize: 80, bgcolor: blue[500] }}
+                                    className={classes.circleImage}
+                                >
+                                    {
+                                        gStores[storeIndex]?.name.charAt(0)
+                                    }
+                                </Avatar>
+                                <Typography className="absolute left-64 top-1/2 -translate-y-1/2" variant="h3" component="h2">
+                                    {gStores[storeIndex]?.name}
+                                </Typography>
+                                <Card className={classes.card}>
+                                    <CardContent>
+                                        <Typography variant="h6" component="h2">
+                                            Card Title
+                                        </Typography>
+                                        <Typography color="textSecondary" gutterBottom>
+                                            Card Subtitle
+                                        </Typography>
+                                        <Typography variant="body2" component="p">
+                                            Card Content
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            </Box>
+                            <div className={classes.content2}>
+                                <Card className={classes.content}>
+                                    <VerticalTabs
+                                        tabWidth={"27rem"}
+                                        items={[
+                                            {
+                                                title: "About",
+                                                element: <StorePage title="About" type="ABOUT" content={{ about: gStores[storeIndex]?.about }} />
+                                            },
+                                            {
+                                                title: "Laptops",
+                                                element: <StorePage title={"Laptops"} />,
+                                            },
+
+                                        ]}
+                                    />
+                                </Card>
+
+                            </div>
+                        </>
+                    )
+                }
+
 
             </Container>
         </MainPageTemplate>
-    )
-}
+    );
+};
