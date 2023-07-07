@@ -9,7 +9,7 @@ const BaseManagementComponent = ({ children, title }) => {
                         <Typography sx={{ marginBottom: 2, marginLeft: 1 }} textAlign={"left"} variant="h4">{title}</Typography>
                     )
                 }
-                <div className="w-full h-full">
+                <div className="w-full h-full flex flex-col">
                     {
                         children
                     }

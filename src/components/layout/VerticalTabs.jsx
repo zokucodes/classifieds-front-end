@@ -4,10 +4,6 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import UserSettingsManagementComponent from '../management/UserSettingsManagementComponent';
-import UserListingsManagementComponent from '../management/UserListingsManagementComponent';
-import CreateListingManagementComponent from '../management/CreateListingManagementComponent';
-import UserStoresManagementComponent from '../management/UserStoresManagementComponent';
 import { makeStyles } from '@mui/styles';
 
 function TabPanel(props) {

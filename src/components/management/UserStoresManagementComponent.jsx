@@ -101,7 +101,7 @@ const UserStoresManagementComponent = () => {
             </Paper>
 
 
-            <div style={{ overflow: loadingStores ? "hidden" : "auto" }} className="mt-8 w-full justify-start items-start flex flex-row flex-wrap gap-4 overflow-y-auto">
+            <div style={{ overflow: loadingStores ? "hidden" : "auto" }} className="pt-8 w-full justify-start max-h-full items-start flex flex-row flex-wrap gap-4 overflow-y-auto">
                 {
                     stores.length > 0 ? (
                         stores.map(data => (

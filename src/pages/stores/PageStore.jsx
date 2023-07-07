@@ -1,7 +1,7 @@
 import MainPageTemplate from "../templates/MainPageTemplate"
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
-import { Avatar, Box, Card, CardContent, Container, Grid, Tab, Tabs, Typography } from "@mui/material";
+import { Avatar, Box, Card, CardContent, Container, Grid, Paper, Tab, Tabs, Typography } from "@mui/material";
 import { blue } from "@mui/material/colors";
 import VerticalTabs from "../../components/layout/VerticalTabs";
 import { StorePage } from "../../components/stores/StorePage";
@@ -20,7 +20,9 @@ const useStyles = makeStyles((theme) => ({
     banner: {
         height: '25vh',
         position: 'relative',
-        backgroundColor: '#e0e0e0', // Placeholder background color,
+        display: "flex",
+        flexDirection: "row",
+        width: "100%"
     },
     circleImage: {
         width: 150,
@@ -29,8 +31,7 @@ const useStyles = makeStyles((theme) => ({
         position: 'absolute',
         top: '50%',
         left: theme.spacing(8),
-        transform: 'translateY(-50%)',
-        backgroundColor: '#fff', // Placeholder background color
+        transform: 'translateY(-50%)'
     },
     content: {
         flex: 1,
@@ -98,27 +99,33 @@ export const PageStore = () => {
                     ) : (
                         <>
                             <Box
-                                style={{
-                                    backgroundPosition: "center center",
-                                    backgroundSize: "contain",
-                                    backgroundRepeat: "no-repeat",
-                                    backgroundImage:
-                                        "url('https://smsoft.co.in/wp-content/uploads/2020/01/SM-BANNER-1.jpg')",
-                                }}
                                 className={classes.banner}
                             >
-                                <Avatar
-                                    src={gStores[storeIndex]?.icon_url}
-                                    sx={{ width: 150, height: 150, fontSize: 80, bgcolor: blue[500] }}
-                                    className={classes.circleImage}
-                                >
-                                    {
-                                        gStores[storeIndex]?.name.charAt(0)
-                                    }
-                                </Avatar>
-                                <Typography className="absolute left-64 top-1/2 -translate-y-1/2" variant="h3" component="h2">
-                                    {gStores[storeIndex]?.name}
-                                </Typography>
+                                <Box sx={{ borderRadius: 0 }} className="p-4 items-center justify-center flex flex-row w-[50%] h-full">
+                                    <Avatar
+                                        src={gStores[storeIndex]?.icon_url}
+                                        sx={{ width: 150, height: 150, fontSize: 80, bgcolor: blue[500] }}
+                                        className="m-auto"
+                                    >
+                                        {
+                                            gStores[storeIndex]?.name.charAt(0)
+                                        }
+                                    </Avatar>
+                                    <Typography className="text-left" variant="h3" component="h2">
+                                        {gStores[storeIndex]?.name}
+                                    </Typography>
+                                </Box>
+                                <Box className="w-full"
+                                    style={{
+                                        backgroundPosition: "center center",
+                                        backgroundSize: "contain",
+                                        backgroundRepeat: "no-repeat",
+                                        backgroundImage:
+                                            "url('https://smsoft.co.in/wp-content/uploads/2020/01/SM-BANNER-1.jpg')",
+                                    }}>
+
+                                </Box>
+
                                 <Card className={classes.card}>
                                     <CardContent>
                                         <Typography variant="h6" component="h2">
