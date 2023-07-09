@@ -162,12 +162,17 @@ export const useGlobal = () => {
         return null
     }
 
-    function gAddStores(data) {
+    function gAddStores(data, replaceMine = false) {
         if (!Array.isArray(data)) {
             data = [data];
         }
         setStores((prevStores) => {
             var newStores = [...prevStores];
+            if (replaceMine) {
+                newStores = newStores(obj => !obj?.am_i_member)
+            }
+
+
             for (var store of data) {
                 let foundStore = false;
                 for (let i = 0; i < newStores.length; i++) {

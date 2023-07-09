@@ -31,6 +31,8 @@ import PageResetPassword from './pages/auth/PageResetPassword';
 import PageMainManagement from './pages/user/PageMainManagement';
 import AuthWrapper from './components/auth/AuthWrapper';
 import { PageStore } from './pages/stores/PageStore';
+import PageSearchListings from './pages/listings/PageSearchListings';
+
 
 const style = {
   position: 'absolute',
@@ -228,6 +230,7 @@ function App() {
                   <Route path='*' element={<AuthWrapper><PageMainManagement /></AuthWrapper>} />
                 </Route>
                 <Route path="store/:id" element={<PageStore />} />
+                <Route path="search" element={<PageSearchListings />} />
               </Route>
 
             </Routes>

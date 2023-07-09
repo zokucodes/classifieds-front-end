@@ -1,13 +1,13 @@
 import Nav from "../../components/layout/Nav"
 
-const MainPageTemplate = ({ children, NAV_ENABLED }) => {
+const MainPageTemplate = ({ children, NAV_ENABLED, NAV_OPTIONS }) => {
     return (
         <>
             <main className='flex flex-col relative items-center justify-center lg:h-auto !h-full'>
                 {
                     NAV_ENABLED && (
                         <div className="absolute top-0 w-full z-30">
-                            <Nav />
+                            <Nav hideSearchBar={NAV_OPTIONS?.hideSearchBar} />
                         </div>
                     )
                 }

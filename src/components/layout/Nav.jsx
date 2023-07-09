@@ -65,7 +65,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
 }));
 
-export default function Nav() {
+export default function Nav({ hideSearchBar }) {
     const navigate = useNavigate()
     const { gToggleColorMode, gColorMode } = useGlobalContext()
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -206,27 +206,36 @@ export default function Nav() {
                         {ENV_APPNAME}
                     </Typography>
 
-                    <Paper className='lg:w-[40%] px-4 py-[3px] w-full flex flex-row ml-8 items-center justify-center'>
-                        <InputBase
-                            sx={{ flex: 1 }}
-                            placeholder={searchPlaceholder}
-                        />
+                    {
+                        !hideSearchBar && (
+                            <>
+                                <Paper className='lg:w-[40%] px-4 py-[3px] w-full flex flex-row ml-8 items-center justify-center'>
+                                    <InputBase
+                                        sx={{ flex: 1 }}
+                                        placeholder={searchPlaceholder}
+                                    />
 
-                        <SearchIcon />
-                        <Divider sx={{ height: 28, marginX: 2, marginY: 0.5 }} orientation="vertical" />
-                        <div className='w-[30%]'>
-                            <InputBase
-                                sx={{ flex: 1 }}
-                                placeholder="Australia"
-                            />
+                                    <SearchIcon />
+                                    <Divider sx={{ height: 28, marginX: 2, marginY: 0.5 }} orientation="vertical" />
+                                    <div className='w-[30%]'>
+                                        <InputBase
+                                            sx={{ flex: 1 }}
+                                            placeholder="Australia"
+                                        />
 
-                        </div>
-                        <RoomIcon />
+                                    </div>
+                                    <RoomIcon />
 
 
-                    </Paper>
+                                </Paper>
+                                <Button sx={{ marginLeft: 1 }} variant='contained'>Search</Button>
+                            </>
 
-                    <Button sx={{ marginLeft: 1 }} variant='contained'>Search</Button>
+                        )
+                    }
+
+
+
 
 
                     <Box sx={{ flexGrow: 1 }} />

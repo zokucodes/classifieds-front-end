@@ -1040,7 +1040,9 @@ export const VALID_VALUES = {
 export const MIN_MAX_VALUES = {
     listing: {
         title: { min: 5, max: 64 },
-        description: { min: 0, max: 512 }
+        description: { min: 0, max: 512 },
+        media: { max: 25 },
+        mediaFileSize: { max: 1024 * 1024 * 25, text: "25 MB" } //25MB
     },
     searchLocations: {
         query: { min: 2, max: 32 }

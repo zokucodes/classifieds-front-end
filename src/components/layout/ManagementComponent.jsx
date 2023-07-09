@@ -3,6 +3,7 @@ import VerticalTabs from "./VerticalTabs"
 import UserSettingsManagementComponent from "../management/UserSettingsManagementComponent"
 import UserListingsManagementComponent from "../management/UserListingsManagementComponent"
 import UserStoresManagementComponent from "../management/UserStoresManagementComponent"
+import CreateListingManagementComponent from "../management/CreateListingManagementComponent"
 
 const ManagementComponent = () => {
 
@@ -13,6 +14,10 @@ const ManagementComponent = () => {
                     {
                         title: "Settings",
                         element: (<UserSettingsManagementComponent />)
+                    },
+                    {
+                        title: "Create Listing",
+                        element: (<CreateListingManagementComponent />)
                     },
                     {
                         title: "My Listings",
