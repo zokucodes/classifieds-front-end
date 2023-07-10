@@ -279,12 +279,12 @@ const CreateListingManagementComponent = () => {
                                 required
                                 type="number"
 
-                                id="title"
+                                id="price"
                                 label="Price"
                                 InputProps={{
                                     startAdornment: <InputAdornment position="start">$</InputAdornment>
                                 }}
-                                name="title"
+                                name="price"
                             // value={email}
                             // onChange={e => setEmail(e.target.value)}
                             />

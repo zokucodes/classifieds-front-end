@@ -1,0 +1,182 @@
+import { Autocomplete, Checkbox, CircularProgress, Divider, InputBase, List, ListItem, ListItemButton, ListItemText, ListSubheader, Paper, Popper, TextField, Typography } from "@mui/material"
+import MainPageTemplate from "../templates/MainPageTemplate"
+import { LoadingButton } from "@mui/lab"
+import { useLayoutEffect, useState } from "react";
+import { useApiContext } from "../../contexts/ApiContext";
+import SearchIcon from '@mui/icons-material/Search';
+import RoomIcon from '@mui/icons-material/Room';
+import SubjectIcon from '@mui/icons-material/Subject';
+
+const PageSearchListings = () => {
+    const { aGetCategories, aHCategories } = useApiContext()
+
+    const [hCategories, setHCategories] = useState([])
+
+    const [checked, setChecked] = useState([0]);
+
+
+    const [selectedCategory, setSelectedCategory] = useState(null)
+    const [showCats, setShowCats] = useState(false)
+
+    const [loadingCats, setLoadingCats] = useState(true)
+
+    const [catAnchor, setCatAnchor] = useState(null)
+
+    useLayoutEffect(() => {
+        aGetCategories("GET_ALL_CATEGORIES_HIERARCHICAL")
+            .then(res => {
+                setHCategories(res.content)
+            })
+            .finally(() => {
+                setLoadingCats(false)
+            })
+    }, [])
+
+    const handleClickCategories = (event) => {
+        setCatAnchor(catAnchor ? null : event.currentTarget);
+    };
+
+    const handleSelectCategory = (e, newValue) => {
+        setSelectedCategory(newValue)
+    }
+
+    const handleToggleCategory = (value) => () => {
+        const currentIndex = checked.indexOf(value);
+        const newChecked = [...checked];
+
+        if (currentIndex === -1) {
+            newChecked.push(value);
+        } else {
+            newChecked.splice(currentIndex, 1);
+        }
+
+        setChecked(newChecked);
+    };
+
+
+    const open = Boolean(catAnchor);
+
+    const renderSubcategories = (subcategories) => {
+        return subcategories.map((subcategory) => (
+            <>
+                <ListItemButton key={`subcategory-${subcategory.id}`} role={undefined} onClick={handleToggleCategory(subcategory)} dense>
+                    <Checkbox
+                        edge="start"
+                        checked={checked.indexOf(subcategory) !== -1}
+                        tabIndex={-1}
+                        disableRipple
+                    />
+                    <ListItemText primary={subcategory?.name} />
+                </ListItemButton>
+            </>
+
+        ));
+    };
+
+    const renderCategories = (categories) => {
+        return categories.map((category) => (
+            <li key={`category-${category?.id}`}>
+                <ul>
+                    <ListSubheader sx={{ cursor: "pointer" }}>{category?.name}</ListSubheader>
+                    {category.subcategories && renderSubcategories(category.subcategories)}
+                </ul>
+            </li>
+        ));
+    };
+
+
+    return (
+        <MainPageTemplate NAV_ENABLED={true} NAV_OPTIONS={{ hideSearchBar: true }}>
+            <Paper className='lg:w-[40%] px-4 py-[3px] w-full flex flex-row ml-8 items-center justify-center'>
+                <div onClick={handleClickCategories} className="flex flex-row gap-2">
+                    <SubjectIcon />
+                    <Typography variant="body1">All categories</Typography>
+                </div>
+
+                <div className="flex flex-col">
+
+                    <Popper
+                        sx={{ width: "10%" }}
+                        open={open}
+                        anchorEl={catAnchor}
+                    >
+                        <Paper className="mt-4">
+                            {/* <Autocomplete
+                                disablePortal
+                                fullWidth
+                                loading={loadingCats}
+                                value={selectedCategory}
+                                onChange={handleSelectCategory}
+                                groupBy={(option) => {
+                                    const root_name = aCategories.find(obj => (!obj?.root_category_id && !obj?.parent_category_id) && option?.root_category_id == obj?.id)
+                                    return root_name?.name
+                                }}
+                                getOptionLabel={(option) => option?.name}
+                                options={aCategories}
+                                sx={{ marginTop: "16px", marginBottom: "8px" }}
+                                renderInput={(params) => <TextField variant="filled" {...params} label="Select a category..."
+                                    InputProps={{
+                                        ...params.InputProps,
+                                        endAdornment: (
+                                            <>
+                                                {loadingCats ? (
+                                                    <CircularProgress color="inherit" size={20} />
+                                                ) : null}
+                                                {params.InputProps.endAdornment}
+                                            </>
+                                        )
+                                    }} />}
+                            /> */}
+                            <List
+                                sx={{
+                                    width: '100%',
+                                    maxWidth: 360,
+                                    position: 'relative',
+                                    overflowY: 'auto',
+                                    maxHeight: 300,
+                                    '& ul': { padding: 0 },
+                                }}
+                                subheader={<li />}
+                            >
+                                {
+                                    hCategories && (
+                                        <>
+                                            {renderCategories(hCategories)}
+                                        </>
+
+                                    )
+                                }
+                            </List>
+                        </Paper>
+
+
+                    </Popper>
+
+                </div>
+
+                <Divider sx={{ height: 28, marginX: 2, marginY: 0.5 }} orientation="vertical" />
+                <InputBase
+                    sx={{ flex: 1 }}
+                    placeholder={"test"}
+                />
+
+                <SearchIcon />
+                <Divider sx={{ height: 28, marginX: 2, marginY: 0.5 }} orientation="vertical" />
+                <div >
+                    <InputBase
+                        sx={{ flex: 1 }}
+                        placeholder="Australia"
+                    />
+
+                </div>
+                <RoomIcon />
+
+
+            </Paper>
+            <LoadingButton sx={{ marginLeft: 1 }} variant='contained'>Search</LoadingButton>
+        </MainPageTemplate>
+    )
+
+}
+
+export default PageSearchListings

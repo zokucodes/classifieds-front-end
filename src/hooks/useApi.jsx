@@ -7,13 +7,19 @@ export const useApi = () => {
         gSetFetchedMyStores, gFetchedMyStores } = useGlobalContext()
 
     const [categories, setCategories] = useState([])
+    const [hCategories, setHCategories] = useState([])
 
-    async function aGetCategories() {
-        if (categories.length == 0) {
-            var res = await GetStaticData(gAddErrors, { type: "GET_ALL_CATEGORIES" })
+    async function aGetCategories(type = "GET_ALL_CATEGORIES") {
+        if ((categories.length == 0 && type == "GET_ALL_CATEGORIES") || (hCategories.length == 0 && type == "GET_ALL_CATEGORIES_HIERARCHICAL")) {
+            var res = await GetStaticData(gAddErrors, { type: type })
             if (res.status == true) {
-                res.content.splice(0, 1)
-                setCategories(res.content)
+                if (type == "GET_ALL_CATEGORIES") {
+                    res.content.splice(0, 1)
+                    setCategories(res.content)
+                } else if (type == "GET_ALL_CATEGORIES_HIERARCHICAL") {
+                    setHCategories(res.content)
+                }
+
             }
             return res
         }
@@ -27,9 +33,9 @@ export const useApi = () => {
             if (res.status == true) {
                 for (let i = 0; i < res.content.length; i++) {
                     res.content[i].am_i_member = true
-                    
+
                 }
-                gAddStores(res.content)
+                gAddStores(res.content, true)
                 gSetFetchedMyStores(true)
                 return res
             }
@@ -63,6 +69,7 @@ export const useApi = () => {
 
     return {
         aCategories: categories,
+        aHCategories: hCategories,
         aGetCategories,
         aGetMyStores,
         aCreateStore,
