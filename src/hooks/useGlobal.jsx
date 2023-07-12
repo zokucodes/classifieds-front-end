@@ -169,7 +169,7 @@ export const useGlobal = () => {
         setStores((prevStores) => {
             var newStores = [...prevStores];
             if (replaceMine) {
-                newStores = newStores(obj => !obj?.am_i_member)
+                newStores = newStores.filter(obj => !obj?.am_i_member)
             }
 
 

@@ -8,6 +8,7 @@ export const useApi = () => {
 
     const [categories, setCategories] = useState([])
     const [hCategories, setHCategories] = useState([])
+    const [attributes, setAttributes] = useState([])
 
     async function aGetCategories(type = "GET_ALL_CATEGORIES") {
         if ((categories.length == 0 && type == "GET_ALL_CATEGORIES") || (hCategories.length == 0 && type == "GET_ALL_CATEGORIES_HIERARCHICAL")) {
@@ -24,6 +25,19 @@ export const useApi = () => {
             return res
         }
         return { status: true, content: categories }
+    }
+
+    async function aGetAttributesByCategoryID(category_id) {
+        const foundAttribute = attributes.find(obj => obj.category_id == category_id)
+        if (!foundAttribute) {
+            const res = await GetStaticData(gAddErrors, { type: "GET_ATTRIBUTES_BY_CATEGORY_ID", category_id })
+            if (res.status == true) {
+                setAttributes(res.content)
+            }
+            return res
+        } else {
+            return { status: true, content: attributes.filter(obj => obj.category_id == category_id) }
+        }
     }
 
     async function aGetMyStores() {
@@ -70,6 +84,8 @@ export const useApi = () => {
     return {
         aCategories: categories,
         aHCategories: hCategories,
+        aAttributes: attributes,
+        aGetAttributesByCategoryID,
         aGetCategories,
         aGetMyStores,
         aCreateStore,

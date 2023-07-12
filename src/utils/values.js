@@ -1031,8 +1031,67 @@ export const STATES_ARRAY = [
 export const VALID_VALUES = {
     searchLocations: {
         type: ["STATE", "CITY"]
-    }
+    },
+    listingReasons: [
+        {
+            id: "UNWANTED_GIFT",
+            text: "Unwanted gift"
+        },
+        {
+            id: "UPGRADE",
+            text: "Upgraded"
+        },
+        {
+            id: "UNUSED",
+            text: "Unused"
+        },
+        {
+            id: "CHANGED_MIND",
+            text: "Change of mind"
+        },
+        {
+            id: "OTHER",
+            text: "Other"
+        }
+    ],
+    listingPaymentMethods: [
+        {
+            id: "CASH",
+            text: "Cash Pickup"
+        },
+        {
+            id: "BANK_TRANSFER",
+            text: "Bank Transfer"
+        },
+        {
+            id: "PAYPAL",
+            text: "PayPal"
+        },
+    ],
+    listingConditions: [
+        {
+            id: "NEW",
+            text: "New"
+        },
+        {
+            id: "LIKE_NEW",
+            text: "Like New"
+        },
+        {
+            id: "GOOD",
+            text: "Good"
+        },
+        {
+            id: "FAIR",
+            text: "Fair"
+        },
+        {
+            id: "PARTS_ONLY",
+            text: "Parts Only"
+        },
+    ]
 }
+
 
 
 
@@ -1042,7 +1101,8 @@ export const MIN_MAX_VALUES = {
         title: { min: 5, max: 64 },
         description: { min: 0, max: 512 },
         media: { max: 25 },
-        mediaFileSize: { max: 1024 * 1024 * 25, text: "25 MB" } //25MB
+        mediaFileSize: { max: 1024 * 1024 * 25, text: "25 MB" }, //25MB
+        price: { max: 1000000 }
     },
     searchLocations: {
         query: { min: 2, max: 32 }

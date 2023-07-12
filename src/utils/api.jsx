@@ -334,7 +334,8 @@ export async function GetStaticData(addError, DATA) {
                 DATA?.type != "CATEGORY_DEPTH_2" &&
                 DATA?.type != "GET_SUB_CATEGORIES_BY_ID" &&
                 DATA?.type != "GET_ALL_CATEGORIES" &&
-                DATA?.type != "GET_ALL_CATEGORIES_HIERARCHICAL"
+                DATA?.type != "GET_ALL_CATEGORIES_HIERARCHICAL" &&
+                DATA?.type != "GET_ATTRIBUTES_BY_CATEGORY_ID"
             ) {
                 errs.push({ code: 400, msg: `Type is invalid` })
             }
@@ -350,7 +351,8 @@ export async function GetStaticData(addError, DATA) {
             return { status: false, error: [{ msg: "Unspecified error" }] }
         }
         const dataToSend = FilterObjectByList(DATA, [
-            'type'
+            'type',
+            'category_id'
         ])
         const res = await axios.get(`${ENV_API_URL}/utils/data/GetStaticData`, { params: dataToSend })
         DEBUG_WTC(DEBUG_VALUES.console.types.auth, `Fetched ${res.data.content.length} data`, DEBUG_VALUES.console.colors.green)

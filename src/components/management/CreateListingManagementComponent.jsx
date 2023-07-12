@@ -1,4 +1,4 @@
-import { Autocomplete, Avatar, Backdrop, Box, Button, Card, Checkbox, CircularProgress, FormControl, FormControlLabel, FormGroup, IconButton, ImageList, ImageListItem, InputAdornment, InputLabel, MenuItem, Select, Switch, TextField, Typography } from "@mui/material"
+import { Autocomplete, Avatar, Backdrop, Box, Button, Card, Checkbox, CircularProgress, FormControl, FormControlLabel, FormGroup, IconButton, ImageList, ImageListItem, InputAdornment, InputLabel, MenuItem, Select, Switch, TextField, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material"
 import BaseManagementComponent from "./BaseManagementComponent"
 import React, { useLayoutEffect, useRef, useState } from "react"
 import ListingContainer from "../listings/ListingContainer"
@@ -10,32 +10,78 @@ import Grid from '@mui/material/Unstable_Grid2';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { useApiContext } from "../../contexts/ApiContext";
 import { LoadingButton } from "@mui/lab";
-import { MIN_MAX_VALUES } from "../../utils/values";
+import { MIN_MAX_VALUES, VALID_VALUES } from "../../utils/values";
 import { SearchLocations } from "../../utils/api";
 
 const CreateListingManagementComponent = () => {
     window.history.replaceState(null, "Create New Listing", "/app/manage/listings")
 
-    const { gAddErrors, gOnlyMyStores } = useGlobalContext()
-    const { aGetCategories, aCategories, aGetMyStores } = useApiContext()
+    const { gAddErrors, gOnlyMyStores, isMobile } = useGlobalContext()
+    const { aGetCategories, aCategories, aGetMyStores, aGetAttributesByCategoryID } = useApiContext()
 
     const [cities, setCities] = useState([])
+    const [attributes, setAttributes] = useState([])
+
+
     const [searchCitiesText, setSearchCitiesText] = useState("")
 
     const [selectedCategory, setSelectedCategory] = useState(null)
     const [selectedSubCategory, setSelectedSubCategory] = useState(null)
 
+    const [selectedAttrOptions, setSelectedAttrOptions] = useState([])
+
     const [selectedStore, setSelectedStore] = useState(null)
     const [selectedStoreLocation, setSelectedStoreLocation] = useState(null)
 
-    const [selectedCity, setSelectedCity] = useState(null)
 
-    const [storeBehalf, setStoreBehalf] = useState(false)
 
+
+
+    //Essential
+    const [title, setTitle] = useState("")
+    const [price, setPrice] = useState(null)
+    const [negotiable, setNegotiable] = useState(false)
+
+    //Photos
     const [selectedFiles, setSelectedFiles] = useState([])
 
+    //Additional
+    const [description, setDescription] = useState("")
+    const [condition, setCondition] = useState(null)
+    const [reason, setReason] = useState(null)
+    const [reasonText, setReasonText] = useState("")
+
+    //Store behalf
+    const [storeBehalf, setStoreBehalf] = useState(false)
+
+    //Individual sale
+    const [selectedCity, setSelectedCity] = useState(null)
+    const [phone, setPhone] = useState("")
+
+    const [fieldState, setFieldState] = useState({});
+
+    const handleFocus = (fieldName) => {
+        setFieldState((prevFieldState) => ({
+            ...prevFieldState,
+            [fieldName]: true,
+        }));
+    };
+
+    const handleBlur = (fieldName) => {
+        setFieldState((prevFieldState) => ({
+            ...prevFieldState,
+            [fieldName]: false,
+        }));
+    };
+
+
+
+
+
+
     const [loadingCats, setLoadingCats] = useState(true)
-    const [loadingStores, setLoadingStores] = useState(true)
+    const [loadingStores, setLoadingStores] = useState(false)
+    const [loadedStores, setLoadedStores] = useState(false)
 
     const uploadRef = useRef(null)
 
@@ -70,7 +116,7 @@ const CreateListingManagementComponent = () => {
 
     useLayoutEffect(() => {
         aGetCategories().finally(() => setLoadingCats(false))
-        aGetMyStores().finally(() => setLoadingStores(false))
+
 
     }, [])
 
@@ -104,6 +150,71 @@ const CreateListingManagementComponent = () => {
             return newFiles
         })
     }
+
+    const handleToggleStoreBehalf = (e) => {
+        e.stopPropagation()
+
+        if (storeBehalf) {
+            setSelectedStore(null)
+            setSelectedStoreLocation(null)
+        }
+        setStoreBehalf(!storeBehalf)
+
+        if (!loadedStores) {
+            setLoadingStores(true)
+            aGetMyStores(res => {
+                if (res.status == true) {
+                    setLoadedStores(true)
+                }
+
+            }).finally(() => {
+                setLoadingStores(false)
+            })
+        }
+
+
+    }
+
+    const handleChangeSubcategory = (e, newValue) => {
+        if (selectedSubCategory != newValue) {
+            if (newValue) {
+                aGetAttributesByCategoryID(newValue.id).then(res => {
+                    if (res.status == true) {
+                        setAttributes(res.content)
+                    }
+                })
+            }
+            setSelectedAttrOptions([])
+            setSelectedSubCategory(newValue)
+
+        }
+
+
+
+    }
+
+    const handleSelectAttrOption = (e) => {
+        const foundAttr = selectedAttrOptions.find(obj => obj == e.target.value)
+        if (!foundAttr) {
+            setSelectedAttrOptions([...selectedAttrOptions, e.target.value])
+        }
+
+    }
+
+    const handleChangePrice = (e) => {
+        e.preventDefault()
+
+        if (e.target.value > MIN_MAX_VALUES.listing.price.max) {
+            setFieldState({ ...fieldState, price: "Super high prices will be reviewed :)" })
+        } else {
+            setFieldState({ ...fieldState, price: "" })
+        }
+        //setPrice(Number(e.target.value).toFixed(2))
+        setPrice(e.target.value)
+
+
+    }
+
 
 
     const RenderPhotos = () => {
@@ -148,7 +259,7 @@ const CreateListingManagementComponent = () => {
                                 ) : (
                                     <>
                                         {
-                                            item?.hover && (
+                                            item?.hover || isMobile && (
                                                 <IconButton onClick={() => alert("Clicked delete photo")} className="translate-x-4 -translate-y-4" color="inherit" sx={{ position: "absolute", top: 0, right: 0 }}>
                                                     <CloseIcon className="bg-red-500 rounded-full" fontSize="large" />
                                                 </IconButton>
@@ -198,7 +309,7 @@ const CreateListingManagementComponent = () => {
 
     return (
         <BaseManagementComponent>
-            <div className="flex flex-col mt-4 pb-4">
+            <div className="flex flex-col mt-4 pb-16">
 
                 <div className="lg:w-[50%] w-full mx-auto items-center flex flex-col h-full gap-16">
                     <div className="w-full text-left">
@@ -211,8 +322,12 @@ const CreateListingManagementComponent = () => {
                             id="title"
                             label="Listing Title"
                             name="title"
-                        // value={email}
-                        // onChange={e => setEmail(e.target.value)}
+                            value={title}
+                            helperText={fieldState.title ? 'Enter a short and descriptive title for your listing' : ''}
+                            onFocus={() => handleFocus('title')}
+                            onBlur={() => handleBlur('title')}
+
+                            onChange={e => setTitle(e.target.value)}
                         />
 
                         <Autocomplete
@@ -245,9 +360,7 @@ const CreateListingManagementComponent = () => {
                             disablePortal
                             fullWidth
                             value={selectedSubCategory}
-                            onChange={(e, newValue) => {
-                                setSelectedSubCategory(newValue)
-                            }}
+                            onChange={handleChangeSubcategory}
                             groupBy={(option) => {
                                 const parent_name = aCategories.find(obj => (obj.id == option.parent_category_id) && option.parent_category_id)
                                 return parent_name?.name
@@ -270,26 +383,70 @@ const CreateListingManagementComponent = () => {
                             />}
                         />
 
-                        <Typography fontWeight={"regular"} sx={{ marginTop: "16px" }} variant="h6">Price</Typography>
-                        <div className="flex flex-row gap-6 items-center justify-start">
+                        <div className="flex flex-col lg:flex-row w-full">
+                            <div className="flex flex-col w-full">
+                                <Typography fontWeight={"regular"} sx={{ marginTop: "16px" }} variant="h6">Price</Typography>
+                                <div className="flex flex-row gap-6 items-center justify-start">
 
-                            <TextField
-                                variant="outlined"
-                                margin="normal"
-                                required
-                                type="number"
+                                    <TextField
+                                        variant="outlined"
+                                        margin="normal"
+                                        required
+                                        type="number"
 
-                                id="price"
-                                label="Price"
-                                InputProps={{
-                                    startAdornment: <InputAdornment position="start">$</InputAdornment>
-                                }}
-                                name="price"
-                            // value={email}
-                            // onChange={e => setEmail(e.target.value)}
-                            />
-                            <FormControlLabel sx={{ userSelect: "none" }} control={<Checkbox />} label="Negotiable" />
+                                        id="price"
+                                        label="Price"
+                                        inputProps={{
+                                            step: 0.05,
+                                            min: 0
+                                        }}
+                                        InputProps={{
+                                            startAdornment: <InputAdornment position="start">$</InputAdornment>
+                                        }}
+
+                                        name="price"
+                                        value={price}
+                                        onChange={handleChangePrice}
+                                        helperText={fieldState.price || ''}
+                                        onFocus={() => handleFocus('price')}
+                                        onBlur={() => handleBlur('price')}
+                                    />
+                                    <FormControlLabel sx={{ userSelect: "none" }} control={<Checkbox checked={negotiable} onChange={() => setNegotiable(!negotiable)} />} label="Negotiable" />
+                                </div>
+
+                            </div>
+                            <div className="w-full">
+                                <Typography fontWeight={"regular"} sx={{ marginTop: "16px" }} variant="h6">Payment Method</Typography>
+                                <FormControl required sx={{ marginTop: "16px" }} fullWidth>
+                                    <InputLabel>Payment Method</InputLabel>
+                                    <Select
+                                        value={reason}
+                                        label="Payment Method"
+                                        onChange={(e) => setReason(e.target.value)}
+                                    >
+                                        {
+                                            VALID_VALUES.listingPaymentMethods.map((option, i) => (
+                                                <MenuItem key={`paymentMethod.${i}`} value={option.id}>{option.text}</MenuItem>
+                                            ))
+                                        }
+                                    </Select>
+                                </FormControl>
+                            </div>
                         </div>
+                        <Typography fontWeight={"regular"} sx={{ marginTop: "16px" }} variant="h6">Condition</Typography>
+                        <ToggleButtonGroup
+                            sx={{ marginTop: "16px" }}
+                            value={condition}
+                            exclusive
+                            onChange={(e, newValue) => setCondition(newValue)}
+                        >
+                            {
+                                VALID_VALUES.listingConditions.map((option, i) => (
+                                    <ToggleButton color="primary" key={`condition.${i}`} value={option.id}>{option.text}</ToggleButton>
+                                ))
+                            }
+                        </ToggleButtonGroup>
+
                     </div>
 
                     <div className="w-full max-h-full text-left">
@@ -305,7 +462,7 @@ const CreateListingManagementComponent = () => {
                             ref={uploadRef}
                             accept="image/*"
                             style={{ display: 'none' }}
-                            id="file-upload"
+                            id="fileUpload"
                             hidden
                             multiple
                             type="file"
@@ -319,7 +476,6 @@ const CreateListingManagementComponent = () => {
                         <Typography variant="h5">Additional information</Typography>
 
 
-
                         <TextField
                             variant="outlined"
                             multiline
@@ -330,9 +486,26 @@ const CreateListingManagementComponent = () => {
                             id="description"
                             label="Description"
                             name="description"
-                        // value={email}
-                        // onChange={e => setEmail(e.target.value)}
+                            value={description}
+                            onChange={e => setDescription(e.target.value)}
+                            helperText={fieldState.description ? 'To get you started, here are some things you can talk about: Issues with the item (if any), sale conditions, warranty' : ''}
+                            onFocus={() => handleFocus('description')}
+                            onBlur={() => handleBlur('description')}
                         />
+                        <FormControl sx={{ marginTop: "16px" }} fullWidth>
+                            <InputLabel>Reason for sale {"(optional)"}</InputLabel>
+                            <Select
+                                value={reason}
+                                label="Reason for sale (optional)"
+                                onChange={(e) => setReason(e.target.value)}
+                            >
+                                {
+                                    VALID_VALUES.listingReasons.map((option, i) => (
+                                        <MenuItem key={`reason.option.${i}`} value={option.id}>{option.text}</MenuItem>
+                                    ))
+                                }
+                            </Select>
+                        </FormControl>
                         <TextField
                             variant="outlined"
                             multiline
@@ -340,66 +513,50 @@ const CreateListingManagementComponent = () => {
                             margin="normal"
                             fullWidth
                             id="reason"
-                            label="Reason for sale (optional)"
+                            label="Describe reason for sale (optional)"
                             name="reason"
-                        // value={email}
-                        // onChange={e => setEmail(e.target.value)}
+                            value={reasonText}
+                            onChange={e => setReasonText(e.target.value)}
+                            helperText={fieldState.reasonText ? '(Optional) Provide some information about why you are selling your item' : ''}
+                            onFocus={() => handleFocus('reasonText')}
+                            onBlur={() => handleBlur('reasonText')}
                         />
-                        <FormControl sx={{ marginTop: "16px" }} fullWidth>
-                            <InputLabel>Brand</InputLabel>
-                            <Select
-                                // value={age}
-                                label="Brand"
-                            // onChange={handleChange}
-                            >
-                                <MenuItem value={10}>Ten</MenuItem>
-                                <MenuItem value={20}>Twenty</MenuItem>
-                                <MenuItem value={30}>Thirty</MenuItem>
-                            </Select>
-                        </FormControl>
-                        <FormControl sx={{ marginTop: "16px" }} fullWidth>
-                            <InputLabel>Storage Capacity</InputLabel>
-                            <Select
-                                // value={age}
-                                label="Storage Capacity"
-                            // onChange={handleChange}
-                            >
-                                <MenuItem value={10}>Ten</MenuItem>
-                                <MenuItem value={20}>Twenty</MenuItem>
-                                <MenuItem value={30}>Thirty</MenuItem>
-                            </Select>
-                        </FormControl>
-                        <FormControl sx={{ marginTop: "16px" }} fullWidth>
-                            <InputLabel>RAM Memory</InputLabel>
-                            <Select
-                                // value={age}
-                                label="RAM Memory"
-                            // onChange={handleChange}
-                            >
-                                <MenuItem value={10}>Ten</MenuItem>
-                                <MenuItem value={20}>Twenty</MenuItem>
-                                <MenuItem value={30}>Thirty</MenuItem>
-                            </Select>
-                        </FormControl>
-                        <FormControl sx={{ marginTop: "16px" }} fullWidth>
-                            <InputLabel>Screen Size {`(Inches)`}</InputLabel>
-                            <Select
-                                // value={age}
-                                label="Screen Size (Inches)"
-                            // onChange={handleChange}
-                            >
-                                <MenuItem value={10}>Ten</MenuItem>
-                                <MenuItem value={20}>Twenty</MenuItem>
-                                <MenuItem value={30}>Thirty</MenuItem>
-                            </Select>
-                        </FormControl>
+
+
                     </div>
+
+
+                    {
+                        attributes.length > 0 && (
+                            <div className="w-full text-left flex flex-col">
+                                <Typography variant="h5">Specific information {"(optional)"}</Typography>
+                                {
+                                    attributes.map((data, i) => (
+                                        <FormControl key={`attribute.${data?.attribute_id}`} sx={{ marginTop: "16px" }} fullWidth>
+                                            <InputLabel>{data?.name}</InputLabel>
+                                            <Select
+                                                label={data?.name}
+                                                onChange={handleSelectAttrOption}
+                                            >
+                                                {
+                                                    data.options.map(option => (
+                                                        <MenuItem key={`attribute.option.${option?.id}`} value={option.id}>{option.text}</MenuItem>
+                                                    ))
+                                                }
+                                            </Select>
+                                        </FormControl>
+                                    ))
+                                }
+                            </div>
+                        )
+                    }
+
                     <div className="w-full text-left flex flex-col">
                         <Typography variant="h5">Other</Typography>
                         <Card className="flex flex-col px-4 py-2 mt-4" variant="outlined">
                             <div className="flex lg:flex-row flex-col justify-between items-center">
                                 <Typography>Post on behalf of one of my stores</Typography>
-                                <Switch onChange={() => setStoreBehalf(!storeBehalf)} checked={storeBehalf} />
+                                <Switch onChange={handleToggleStoreBehalf} checked={storeBehalf} />
                             </div>
                             {
                                 storeBehalf ? (
@@ -486,8 +643,13 @@ const CreateListingManagementComponent = () => {
                                             }}
                                             autoComplete="tel-national"
                                             name="phone"
-                                        // value={email}
-                                        // onChange={e => setEmail(e.target.value)}
+                                            value={phone}
+                                            onChange={e => {
+                                                if (e.target.value.length < 11) {
+                                                    setPhone(e.target.value)
+                                                }
+
+                                            }}
                                         />
                                     </>
                                 )
@@ -508,7 +670,7 @@ const CreateListingManagementComponent = () => {
 
 
 
-        </BaseManagementComponent>
+        </BaseManagementComponent >
     )
 }
 

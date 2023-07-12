@@ -225,7 +225,7 @@ export async function FileChange(e, max_size, allowed_filetypes = ['image'], max
 
     if (max_files != null) {
         if (files.length > max_files) {
-            return { status: false, error: [{ msg: 'Maximum number of files reached' }] }
+            return { status: false, error: [{ msg: `Maximum of ${max_files} files reached` }] }
         }
     }
 
@@ -233,7 +233,7 @@ export async function FileChange(e, max_size, allowed_filetypes = ['image'], max
     var files_return = []
     for (var file of files) {
         if (file.size > (max_size || 10485760)) {
-            return { status: false, error: [{ msg: 'Media must be less than 10 MB' }] }
+            return { status: false, error: [{ msg: !max_size ? 'Each file must be less than 10 MB' : `Each file must be less than ${Math.ceil(max_size / 1048576)} MB` }] }
         }
 
         for (var filetype of allowed_filetypes) {
@@ -263,7 +263,7 @@ export function CompareStringsIgnoringPunctuation(str1, str2, mode = "INCLUDES")
     if (!str1 || !str2) {
         return false
     }
-    const punctuationRegex =  /[^\w\s]|_/g;
+    const punctuationRegex = /[^\w\s]|_/g;
     const cleanStr1 = str1.toLowerCase().replace(punctuationRegex, '');
     const cleanStr2 = str2.toLowerCase().replace(punctuationRegex, '');
     if (mode == "INCLUDES") {
@@ -276,6 +276,10 @@ export function CompareStringsIgnoringPunctuation(str1, str2, mode = "INCLUDES")
 
 
 export function IsValueInRange(low, high, value) {
+    if (typeof value === 'string') {
+        value = value.length
+    }
+
     if (low == null) {
         return (value <= high)
     }
