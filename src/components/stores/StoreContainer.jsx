@@ -1,7 +1,10 @@
 import { Box, Button, Card, CardActions, CardContent, CardMedia, Chip, IconButton, Typography } from "@mui/material"
 import EditIcon from '@mui/icons-material/Edit';
+import { useNavigate } from "react-router-dom";
 
 const StoreContainer = ({ store }) => {
+
+    const navigate = useNavigate()
 
     return (
         <Card className="lg:w-full w-full lg:h-[25vh]" variant="outlined" sx={{ position: "relative" }}>
@@ -56,7 +59,7 @@ const StoreContainer = ({ store }) => {
 
                     <CardActions className="flex  flex-col w-full mt-auto" >
                         <div className="flex ml-auto items-center justify-end flex-row gap-1">
-                            <Button fullWidth sx={{ paddingX: 8 }} variant="contained">View</Button>
+                            <Button fullWidth sx={{ paddingX: 8 }} variant="contained" onClick={() => navigate('/app/store/' + store.id)}>View</Button>
                             <Button variant="contained" color="primary" sx={{ minWidth: 'fit-content' }}>
                                 <EditIcon />
                             </Button>

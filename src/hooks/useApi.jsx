@@ -1,10 +1,10 @@
 import { useState } from "react"
 import { useGlobalContext } from "../contexts/GlobalContext"
-import { CreateStore, GetMyStores, GetStaticData, GetStoreByID } from "../utils/api"
+import { CreateStore, GetMyListings, GetMyStores, GetStaticData, GetStoreByID, UpdateListingDraft } from "../utils/api"
 
 export const useApi = () => {
     const { gLoggedIn, gAddErrors, gAddStores, gAddSnackbar, gSetSnackbarsOpen, setFetched,
-        gSetFetchedMyStores, gFetchedMyStores } = useGlobalContext()
+        gSetFetchedMyStores, gFetchedMyStores, gAddListings, gListings } = useGlobalContext()
 
     const [categories, setCategories] = useState([])
     const [hCategories, setHCategories] = useState([])
@@ -81,6 +81,22 @@ export const useApi = () => {
         return res
     }
 
+    async function aUpdateListingDraft(data) {
+        const res = await UpdateListingDraft(gAddErrors, data)
+        return res
+    }
+
+    async function aGetMyListings(data = { type: "PUBLISHED" }) {
+        const res = await GetMyListings(gAddErrors, data)
+
+        if (res.status == true) {
+            gAddListings(res.content)
+            return res
+        }
+        return res
+        
+    }
+
     return {
         aCategories: categories,
         aHCategories: hCategories,
@@ -89,7 +105,10 @@ export const useApi = () => {
         aGetCategories,
         aGetMyStores,
         aCreateStore,
-        aGetStoreByID
+        aGetStoreByID,
+        aUpdateListingDraft,
+        aGetMyListings
+
 
 
     }

@@ -5,9 +5,12 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(),
-  // basicSsl()
+    // basicSsl()
   ],
   server: {
+    port: 80
+  },
+  preview: {
     port: 80
   }
 })

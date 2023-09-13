@@ -1,13 +1,19 @@
 import { Avatar, Box, Button, TextField, Typography } from "@mui/material"
 import BaseManagementComponent from "./BaseManagementComponent"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import ListingContainer from "../listings/ListingContainer"
 import CreateIcon from '@mui/icons-material/Create';
+import { useApiContext } from "../../contexts/ApiContext";
+import { useGlobalContext } from "../../contexts/GlobalContext";
 
 const UserListingsManagementComponent = () => {
     window.history.replaceState(null, "Listings", "/app/manage/listings")
+    const { aGetMyListings } = useApiContext()
+    const { gListings } = useGlobalContext()
 
-    const [email, setEmail] = useState("")
+    useEffect(() => {
+        aGetMyListings({ type: "PUBLISHED" })
+    }, [])
 
     return (
         <BaseManagementComponent>
@@ -19,6 +25,11 @@ const UserListingsManagementComponent = () => {
             </div>
 
             <div className="mt-8 w-full justify-start items-start flex flex-row flex-wrap gap-4 overflow-y-auto">
+                {
+                    gListings.map(listing => (
+                        <ListingContainer listing={listing} />
+                    ))
+                }
                 <ListingContainer listing={{
                     title: "test listing",
                     description: "Hardly used RTX 4090. Only used for crypto mining 24/7 for 3 months.\nComes with the original…",

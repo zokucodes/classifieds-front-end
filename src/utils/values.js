@@ -1102,7 +1102,8 @@ export const MIN_MAX_VALUES = {
         description: { min: 0, max: 512 },
         media: { max: 25 },
         mediaFileSize: { max: 1024 * 1024 * 25, text: "25 MB" }, //25MB
-        price: { max: 1000000 }
+        price: { max: 1000000 },
+        reasonText: { max: 255 }
     },
     searchLocations: {
         query: { min: 2, max: 32 }

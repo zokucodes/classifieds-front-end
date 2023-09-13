@@ -121,7 +121,7 @@ export const PageStore = () => {
                                         backgroundSize: "contain",
                                         backgroundRepeat: "no-repeat",
                                         backgroundImage:
-                                            "url('https://smsoft.co.in/wp-content/uploads/2020/01/SM-BANNER-1.jpg')",
+                                            "url('https://hpservicecenterdelhi.com/images/banner2.jpg')",
                                     }}>
 
                                 </Box>

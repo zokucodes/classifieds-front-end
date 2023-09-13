@@ -8,11 +8,11 @@ import { ApiProvider } from './contexts/ApiContext.jsx'
 ReactDOM.createRoot(document.getElementById('root')).render(
 
   // <React.StrictMode>
-    <GlobalProvider>
-      <ApiProvider>
+  <GlobalProvider>
+    <ApiProvider>
 
-        <App />
-      </ApiProvider>
-    </GlobalProvider>,
-  {/* </React.StrictMode> */}
+      <App />
+    </ApiProvider>
+  </GlobalProvider>,
+  //</React.StrictMode>
 )

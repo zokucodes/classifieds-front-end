@@ -17,7 +17,7 @@ const CreateListingManagementComponent = () => {
     window.history.replaceState(null, "Create New Listing", "/app/manage/listings")
 
     const { gAddErrors, gOnlyMyStores, isMobile } = useGlobalContext()
-    const { aGetCategories, aCategories, aGetMyStores, aGetAttributesByCategoryID } = useApiContext()
+    const { aGetCategories, aCategories, aGetMyStores, aGetAttributesByCategoryID, aUpdateListingDraft } = useApiContext()
 
     const [cities, setCities] = useState([])
     const [attributes, setAttributes] = useState([])
@@ -41,6 +41,7 @@ const CreateListingManagementComponent = () => {
     const [title, setTitle] = useState("")
     const [price, setPrice] = useState(null)
     const [negotiable, setNegotiable] = useState(false)
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null)
 
     //Photos
     const [selectedFiles, setSelectedFiles] = useState([])
@@ -214,6 +215,30 @@ const CreateListingManagementComponent = () => {
 
 
     }
+
+    const allListingData = () => {
+        return {
+            store_id: selectedStore?.id,
+            category_id: selectedSubCategory?.id,
+            title: title,
+            description: description,
+            reason: reason?.id,
+            reason_text: reasonText,
+            item_condition: condition?.id,
+            price: price,
+            city_id: selectedCity?.id,
+            phone_number: phone,
+            attributes: attributes,
+            payment_method: selectedPaymentMethod?.id,
+
+
+        }
+    }
+
+    const handleUpdateListingDraft = () => {
+        aUpdateListingDraft(allListingData()).then(res => console.log(res))
+    }
+
 
 
 
@@ -420,9 +445,9 @@ const CreateListingManagementComponent = () => {
                                 <FormControl required sx={{ marginTop: "16px" }} fullWidth>
                                     <InputLabel>Payment Method</InputLabel>
                                     <Select
-                                        value={reason}
+                                        value={selectedPaymentMethod}
                                         label="Payment Method"
-                                        onChange={(e) => setReason(e.target.value)}
+                                        onChange={(e) => setSelectedPaymentMethod(e.target.value)}
                                     >
                                         {
                                             VALID_VALUES.listingPaymentMethods.map((option, i) => (
@@ -433,19 +458,26 @@ const CreateListingManagementComponent = () => {
                                 </FormControl>
                             </div>
                         </div>
-                        <Typography fontWeight={"regular"} sx={{ marginTop: "16px" }} variant="h6">Condition</Typography>
-                        <ToggleButtonGroup
-                            sx={{ marginTop: "16px" }}
-                            value={condition}
-                            exclusive
-                            onChange={(e, newValue) => setCondition(newValue)}
-                        >
-                            {
-                                VALID_VALUES.listingConditions.map((option, i) => (
-                                    <ToggleButton color="primary" key={`condition.${i}`} value={option.id}>{option.text}</ToggleButton>
-                                ))
-                            }
-                        </ToggleButtonGroup>
+                        {
+                            selectedSubCategory?.conditions_enabled ? (
+                                <>
+                                    <Typography fontWeight={"regular"} sx={{ marginTop: "16px" }} variant="h6">Condition</Typography>
+                                    <ToggleButtonGroup
+                                        sx={{ marginTop: "16px" }}
+                                        value={condition}
+                                        exclusive
+                                        onChange={(e, newValue) => setCondition(newValue)}
+                                    >
+                                        {
+                                            VALID_VALUES.listingConditions.map((option, i) => (
+                                                <ToggleButton color="primary" key={`condition.${i}`} value={option.id}>{option.text}</ToggleButton>
+                                            ))
+                                        }
+                                    </ToggleButtonGroup>
+                                </>
+                            ) : (null)
+                        }
+
 
                     </div>
 
@@ -492,35 +524,44 @@ const CreateListingManagementComponent = () => {
                             onFocus={() => handleFocus('description')}
                             onBlur={() => handleBlur('description')}
                         />
-                        <FormControl sx={{ marginTop: "16px" }} fullWidth>
-                            <InputLabel>Reason for sale {"(optional)"}</InputLabel>
-                            <Select
-                                value={reason}
-                                label="Reason for sale (optional)"
-                                onChange={(e) => setReason(e.target.value)}
-                            >
-                                {
-                                    VALID_VALUES.listingReasons.map((option, i) => (
-                                        <MenuItem key={`reason.option.${i}`} value={option.id}>{option.text}</MenuItem>
-                                    ))
-                                }
-                            </Select>
-                        </FormControl>
-                        <TextField
-                            variant="outlined"
-                            multiline
-                            minRows={2}
-                            margin="normal"
-                            fullWidth
-                            id="reason"
-                            label="Describe reason for sale (optional)"
-                            name="reason"
-                            value={reasonText}
-                            onChange={e => setReasonText(e.target.value)}
-                            helperText={fieldState.reasonText ? '(Optional) Provide some information about why you are selling your item' : ''}
-                            onFocus={() => handleFocus('reasonText')}
-                            onBlur={() => handleBlur('reasonText')}
-                        />
+                        {
+                            selectedSubCategory?.reason_enabled ? (
+                                <>
+                                    <FormControl sx={{ marginTop: "16px" }} fullWidth>
+                                        <InputLabel>Reason for sale {"(optional)"}</InputLabel>
+                                        <Select
+                                            value={reason}
+                                            label="Reason for sale (optional)"
+                                            onChange={(e) => setReason(e.target.value)}
+                                        >
+                                            {
+                                                VALID_VALUES.listingReasons.map((option, i) => (
+                                                    <MenuItem key={`reason.option.${i}`} value={option.id}>{option.text}</MenuItem>
+                                                ))
+                                            }
+                                        </Select>
+                                    </FormControl>
+                                    <TextField
+                                        variant="outlined"
+                                        multiline
+                                        minRows={2}
+                                        margin="normal"
+                                        fullWidth
+                                        id="reason"
+                                        label="Describe reason for sale (optional)"
+                                        name="reason"
+                                        value={reasonText}
+                                        onChange={e => setReasonText(e.target.value)}
+                                        helperText={fieldState.reasonText ? '(Optional) Provide some information about why you are selling your item' : ''}
+                                        onFocus={() => handleFocus('reasonText')}
+                                        onBlur={() => handleBlur('reasonText')}
+                                    />
+                                </>
+
+                            ) : (null)
+                        }
+
+
 
 
                     </div>
@@ -551,56 +592,30 @@ const CreateListingManagementComponent = () => {
                         )
                     }
 
-                    <div className="w-full text-left flex flex-col">
-                        <Typography variant="h5">Other</Typography>
-                        <Card className="flex flex-col px-4 py-2 mt-4" variant="outlined">
-                            <div className="flex lg:flex-row flex-col justify-between items-center">
-                                <Typography>Post on behalf of one of my stores</Typography>
-                                <Switch onChange={handleToggleStoreBehalf} checked={storeBehalf} />
-                            </div>
-                            {
-                                storeBehalf ? (
-                                    <>
-                                        <Autocomplete
-                                            disablePortal
-                                            fullWidth
-                                            loading={loadingStores}
-                                            value={selectedStore}
-                                            onChange={(e, newValue) => {
-                                                setSelectedStore(newValue)
-                                            }}
-                                            getOptionLabel={(option) => option?.name}
-                                            options={gOnlyMyStores()}
-                                            sx={{ marginTop: "28px", marginBottom: "8px" }}
-                                            renderInput={(params) => <TextField {...params} label="Select a store..."
-                                                InputProps={{
-                                                    ...params.InputProps,
-                                                    endAdornment: (
-                                                        <>
-                                                            {loadingCats ? (
-                                                                <CircularProgress color="inherit" size={20} />
-                                                            ) : null}
-                                                            {params.InputProps.endAdornment}
-                                                        </>
-                                                    )
-                                                }} />}
-                                        />
-                                        {
-                                            selectedStore?.locations?.length > 0 && (
+                    {
+                        selectedSubCategory?.store_enabled ? (
+                            <div className="w-full text-left flex flex-col">
+                                <Typography variant="h5">Other</Typography>
+                                <Card className="flex flex-col px-4 py-2 mt-4" variant="outlined">
+                                    <div className="flex lg:flex-row flex-col justify-between items-center">
+                                        <Typography>Post on behalf of one of my stores</Typography>
+                                        <Switch onChange={handleToggleStoreBehalf} checked={storeBehalf} />
+                                    </div>
+                                    {
+                                        storeBehalf ? (
+                                            <>
                                                 <Autocomplete
-                                                    disabled={!selectedStore}
-                                                    loading={loadingStores}
                                                     disablePortal
                                                     fullWidth
-                                                    value={selectedStoreLocation}
+                                                    loading={loadingStores}
+                                                    value={selectedStore}
                                                     onChange={(e, newValue) => {
-                                                        setSelectedStoreLocation(newValue)
+                                                        setSelectedStore(newValue)
                                                     }}
-                                                    groupBy={(option) => option?.name}
                                                     getOptionLabel={(option) => option?.name}
-                                                    options={selectedStore?.locations}
-                                                    sx={{ marginTop: "8px", marginBottom: "8px" }}
-                                                    renderInput={(params) => <TextField {...params} label={!selectedCategory ? "Select a store location..." : "Select a store location..."}
+                                                    options={gOnlyMyStores()}
+                                                    sx={{ marginTop: "28px", marginBottom: "8px" }}
+                                                    renderInput={(params) => <TextField {...params} label="Select a store..."
                                                         InputProps={{
                                                             ...params.InputProps,
                                                             endAdornment: (
@@ -611,55 +626,87 @@ const CreateListingManagementComponent = () => {
                                                                     {params.InputProps.endAdornment}
                                                                 </>
                                                             )
-                                                        }}
-                                                    />}
+                                                        }} />}
                                                 />
-                                            )
-                                        }
-                                    </>
-                                ) : (
-                                    <>
-                                        <Autocomplete
-                                            disablePortal
-                                            fullWidth
-                                            value={selectedCity}
-                                            onChange={(e, newValue) => {
-                                                setSelectedCity(newValue)
-                                            }}
-                                            getOptionLabel={(option) => option?.name}
-                                            onInputChange={handleSearchCities}
-                                            options={cities}
-                                            sx={{ marginTop: "28px", marginBottom: "8px" }}
-                                            renderInput={(params) => <TextField {...params} label="Select a city..." />}
-                                        />
-                                        <TextField
-                                            variant="outlined"
-                                            margin="normal"
-                                            type="number"
-                                            id="phone"
-                                            label="Phone Number"
-                                            InputProps={{
-                                                startAdornment: <InputAdornment position="start">+61</InputAdornment>
-                                            }}
-                                            autoComplete="tel-national"
-                                            name="phone"
-                                            value={phone}
-                                            onChange={e => {
-                                                if (e.target.value.length < 11) {
-                                                    setPhone(e.target.value)
+                                                {
+                                                    selectedStore?.locations?.length > 0 && (
+                                                        <Autocomplete
+                                                            disabled={!selectedStore}
+                                                            loading={loadingStores}
+                                                            disablePortal
+                                                            fullWidth
+                                                            value={selectedStoreLocation}
+                                                            onChange={(e, newValue) => {
+                                                                setSelectedStoreLocation(newValue)
+                                                            }}
+                                                            groupBy={(option) => option?.name}
+                                                            getOptionLabel={(option) => option?.name}
+                                                            options={selectedStore?.locations}
+                                                            sx={{ marginTop: "8px", marginBottom: "8px" }}
+                                                            renderInput={(params) => <TextField {...params} label={!selectedCategory ? "Select a store location..." : "Select a store location..."}
+                                                                InputProps={{
+                                                                    ...params.InputProps,
+                                                                    endAdornment: (
+                                                                        <>
+                                                                            {loadingCats ? (
+                                                                                <CircularProgress color="inherit" size={20} />
+                                                                            ) : null}
+                                                                            {params.InputProps.endAdornment}
+                                                                        </>
+                                                                    )
+                                                                }}
+                                                            />}
+                                                        />
+                                                    )
                                                 }
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Autocomplete
+                                                    disablePortal
+                                                    fullWidth
+                                                    value={selectedCity}
+                                                    onChange={(e, newValue) => {
+                                                        setSelectedCity(newValue)
+                                                    }}
+                                                    getOptionLabel={(option) => option?.name}
+                                                    onInputChange={handleSearchCities}
+                                                    options={cities}
+                                                    sx={{ marginTop: "28px", marginBottom: "8px" }}
+                                                    renderInput={(params) => <TextField {...params} label="Select a city..." />}
+                                                />
+                                                <TextField
+                                                    variant="outlined"
+                                                    margin="normal"
+                                                    type="number"
+                                                    id="phone"
+                                                    label="Phone Number"
+                                                    InputProps={{
+                                                        startAdornment: <InputAdornment position="start">+61</InputAdornment>
+                                                    }}
+                                                    autoComplete="tel-national"
+                                                    name="phone"
+                                                    value={phone}
+                                                    onChange={e => {
+                                                        if (e.target.value.length < 11) {
+                                                            setPhone(e.target.value)
+                                                        }
 
-                                            }}
-                                        />
-                                    </>
-                                )
-                            }
+                                                    }}
+                                                />
+                                            </>
+                                        )
+                                    }
 
 
-                        </Card>
-                    </div>
+                                </Card>
+                            </div>
+                        ) : (null)
+                    }
+
                     <LoadingButton
                         fullWidth
+                        onClick={handleUpdateListingDraft}
                         variant="contained"
                     >
                         Post Listing

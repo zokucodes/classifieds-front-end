@@ -1,5 +1,6 @@
 import { Box, Button, Card, CardActions, CardContent, CardMedia, IconButton, Typography } from "@mui/material"
 import EditIcon from '@mui/icons-material/Edit';
+import { ConvertTimeFromServer } from "../../utils/misc";
 
 const ListingContainer = ({ listing, classname, orientation = "VERTICAL", styles = {} }) => {
     if (orientation == "VERTICAL") {
@@ -43,7 +44,7 @@ const ListingContainer = ({ listing, classname, orientation = "VERTICAL", styles
                             ${listing?.price} <Typography className=" inline-block -translate-y-[2px]" variant="h6">{listing?.negotiable && "Negotiable"}</Typography>
                         </Typography>
                         <Typography variant="caption" display="block" gutterBottom>
-                            Listed {listing?.creation_time} days ago
+                            Listed {listing?.posted_date ? (ConvertTimeFromServer(listing.posted_date).diff) : ""} ago
                         </Typography>
                     </div>
                     <div className="flex w-full items-center justify-between !mx-auto flex-row h-full gap-1">

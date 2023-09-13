@@ -242,36 +242,28 @@ const PageSearchListings = () => {
                         {
                             loadingListings ? (
                                 <>
-                                    <ListingContainer orientation="HORIZONTAL"
-                                        listing={{
-                                            title: "RTX 4090",
-                                            description: "Hardly used RTX 4090. Only used for crypto mining 24/7 for 3 months.\nComes with the original…",
-                                            price: "10,000",
-                                            negotiable: true,
-                                            creation_time: 10,
-                                            cover_image: "https://www.pcworld.com/wp-content/uploads/2023/04/Nvidia-GeForce-RTX-4090-1-2.jpg?quality=50&strip=all"
-                                        }}
-                                    />
-                                    <ListingContainer orientation="HORIZONTAL"
-                                        listing={{
-                                            title: "RTX 4090",
-                                            description: "Hardly used RTX 4090. Only used for crypto mining 24/7 for 3 months.\nComes with the original…",
-                                            price: "10,000",
-                                            negotiable: true,
-                                            creation_time: 10,
-                                            cover_image: "https://www.pcworld.com/wp-content/uploads/2023/04/Nvidia-GeForce-RTX-4090-1-2.jpg?quality=50&strip=all"
-                                        }}
-                                    />
-                                    <ListingContainer orientation="HORIZONTAL"
-                                        listing={{
-                                            title: "RTX 4090",
-                                            description: "Hardly used RTX 4090. Only used for crypto mining 24/7 for 3 months.\nComes with the original…",
-                                            price: "10,000",
-                                            negotiable: true,
-                                            creation_time: 10,
-                                            cover_image: "https://www.pcworld.com/wp-content/uploads/2023/04/Nvidia-GeForce-RTX-4090-1-2.jpg?quality=50&strip=all"
-                                        }}
-                                    />
+                                    {
+                                        (
+
+                                            () => {
+                                                const idk = []
+                                                for (let i = 0; i < 50; i++) {
+                                                    idk.push(<ListingContainer orientation="HORIZONTAL"
+                                                        listing={{
+                                                            title: "RTX 4090",
+                                                            description: "Hardly used RTX 4090. Only used for crypto mining 24/7 for 3 months.\nComes with the original…",
+                                                            price: "10,000",
+                                                            negotiable: true,
+                                                            creation_time: 10,
+                                                            cover_image: "https://www.pcworld.com/wp-content/uploads/2023/04/Nvidia-GeForce-RTX-4090-1-2.jpg?quality=50&strip=all"
+                                                        }}
+                                                    />)
+                                                    
+                                                }
+                                                return idk
+                                            }
+                                        )()
+                                    }
                                 </>
                             ) : (
                                 <div className="m-auto">

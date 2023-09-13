@@ -289,3 +289,48 @@ export function IsValueInRange(low, high, value) {
 
     return (value >= low && value <= high)
 }
+
+export function ConvertTimeFromServer(TIMESTRING, mode = "db") {
+    const dateString = TIMESTRING;
+    let givenDate;
+
+    if (mode === "db") {
+        try {
+            const [timeString, dateStringFormatted] = dateString.split(' ');
+            const [hours, minutes, seconds] = timeString.split(':');
+            const [day, month, year] = dateStringFormatted.split('-');
+
+            givenDate = new Date(`${month}/${day}/${year} ${hours}:${minutes}:${seconds}`);
+        } catch (err) {
+            givenDate = new Date(Date.parse(TIMESTRING));
+        }
+    } else {
+        try {
+            const [time, date] = TIMESTRING.split(" ");
+            const [hours, minutes, seconds] = time.split(":");
+            const [day, month, year] = date.split("-");
+
+            givenDate = new Date(year, month - 1, day, hours, minutes, seconds);
+        } catch (err) {
+            givenDate = new Date(Date.parse(TIMESTRING));
+        }
+    }
+
+    const now = new Date();
+    const diffInSeconds = Math.floor((now.getTime() - givenDate.getTime()) / 1000);
+
+    if (diffInSeconds <= 1) {
+        return { diff: `Now`, original: TIMESTRING };
+    } else if (diffInSeconds < 60) {
+        return { diff: `${diffInSeconds} sec`, original: TIMESTRING };
+    } else if (diffInSeconds < 3600) {
+        const diffInMinutes = Math.floor(diffInSeconds / 60);
+        return { diff: `${diffInMinutes} minutes`, original: TIMESTRING };
+    } else if (diffInSeconds < 86400) {
+        const diffInHours = Math.floor(diffInSeconds / 3600);
+        return { diff: `${diffInHours} hours`, original: TIMESTRING };
+    } else {
+        const diffInDays = Math.floor(diffInSeconds / 86400);
+        return { diff: `${diffInDays} days`, original: TIMESTRING };
+    }
+}

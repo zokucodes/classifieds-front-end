@@ -23,6 +23,8 @@ export const useGlobal = () => {
     const [stores, setStores] = useState([])
     const [fetchedMyStores, setFetchedMyStores] = useState(false)
 
+    const [listings, setListings] = useState([])
+
     const gCloseSnackbars = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -162,11 +164,49 @@ export const useGlobal = () => {
         return null
     }
 
+    function gGetListingIndexByID(listing_id) {
+        for (let i = 0; i < listings.length; i++) {
+            if (listings[i].id == listing_id) {
+                return i
+            }
+
+        }
+        return null
+    }
+
     function gAddStores(data, replaceMine = false) {
         if (!Array.isArray(data)) {
             data = [data];
         }
         setStores((prevStores) => {
+            var newStores = [...prevStores];
+            if (replaceMine) {
+                newStores = newStores.filter(obj => !obj?.am_i_member)
+            }
+
+
+            for (var store of data) {
+                let foundStore = false;
+                for (let i = 0; i < newStores.length; i++) {
+                    if (newStores[i].id === store.id) {
+                        newStores[i] = store;
+                        foundStore = true;
+                        break;
+                    }
+                }
+                if (!foundStore) {
+                    newStores.unshift(store);
+                }
+            }
+            return newStores;
+        });
+    }
+
+    function gAddListings(data, replaceMine = false) {
+        if (!Array.isArray(data)) {
+            data = [data];
+        }
+        setListings((prevStores) => {
             var newStores = [...prevStores];
             if (replaceMine) {
                 newStores = newStores.filter(obj => !obj?.am_i_member)
@@ -247,7 +287,11 @@ export const useGlobal = () => {
             gStores: stores,
             gAddStores,
             gRemoveStoreByID,
-            gGetStoreIndexByID
+            gGetStoreIndexByID,
+
+            gAddListings,
+            gListings: listings,
+            gGetListingIndexByID
 
         }
     );

@@ -281,8 +281,8 @@ export default function Nav({ hideSearchBar }) {
                                 </>
                             ) : (
                                 <div className='flex flex-row gap-3'>
-                                    <Button variant='contained'>Login</Button>
-                                    <Button variant='contained'>Register</Button>
+                                    <Button variant='contained' onClick={() => navigate('/auth/login')}>Login</Button>
+                                    <Button variant='contained' onClick={() => navigate('/auth/register')}>Register</Button>
                                     <IconButton color='inherit' onClick={gToggleColorMode}>
                                         {
                                             gColorMode == "light" ? (
